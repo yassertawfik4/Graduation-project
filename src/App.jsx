@@ -1,11 +1,12 @@
 import { Route, Routes } from "react-router-dom";
+import NavbarContainer from "./components/NavBar/NavbarContainer/NavbarContainer";
 
 function App() {
   return (
     <>
-      <h1 className="text-3xl font-bold underline">Hello worlddd!</h1>
+      <NavbarContainer />
       <Routes>
-        <Route path="/" element={<h1>Home</h1>} />
+        <Route path="/" element={""} />
       </Routes>
     </>
   );
