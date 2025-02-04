@@ -1,10 +1,11 @@
+import cover from '/public/images/Cover.png'
 function AboutCompany() {
   return (
     <section className="">
       <div className="container mx-auto">
         <div className=" py-7 px-2 flex justify-between items-center">
           <div className="relative">
-            <img src="/public/images/Cover.png" alt="" />
+            <img src={cover} alt="" />
             <img
               className="absolute top-0"
               src="/public/images/PhotoCover.svg"
