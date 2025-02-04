@@ -3,7 +3,7 @@ import SharedNavbar from "../SharedNavbar/SharedNavbar";
 
 function LoggedOutNavbar() {
   return (
-    <nav className=" sticky top-0">
+    <nav className="bg-white sticky z-20 top-0">
       <div className="container mx-auto p-4 flex justify-between items-center">
         <Link className="font-bold text-3xl" to="/">
           StepUp
