@@ -1,3 +1,4 @@
+import HeroImage from "/public/images/heroSection.svg";
 import HeroPhoto from "/public/images/Frame 155.png";
 function HeroSection() {
   return (
@@ -14,7 +15,7 @@ function HeroSection() {
             </p>
           </div>
           <div className="w-[520px] h-[351px]">
-            <img className="" src="/public/images/heroSection.svg" alt="" />
+            <img className="" src={HeroImage} alt="HeroImage" />
           </div>
         </div>
         <div className="bg-[#F3F3F3] my-20 rounded-lg">
