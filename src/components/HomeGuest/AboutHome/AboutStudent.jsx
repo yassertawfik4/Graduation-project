@@ -1,5 +1,4 @@
-import { NavLink } from "react-router-dom";
-
+import StudentImage from "/public/images/Group 205.png";
 function AboutStudent() {
   return (
     <section className="my-32">
@@ -23,7 +22,7 @@ function AboutStudent() {
             </div>
           </div>
           <div>
-            <img src="/public/images/Group 205.png" alt="" />
+            <img loading="lazy" src={StudentImage} alt="StudentImage" />
           </div>
         </div>
       </div>

@@ -1,15 +1,17 @@
-import cover from '/public/images/Cover.png'
+import cover from "/public/images/Cover.png";
+import PhotoCover from "/public/images/PhotoCover.svg";
 function AboutCompany() {
   return (
     <section className="">
       <div className="container mx-auto">
         <div className=" py-7 px-2 flex justify-between items-center">
           <div className="relative">
-            <img src={cover} alt="" />
+            <img loading="lazy" src={cover} alt="Cover" />
             <img
+              loading="lazy"
               className="absolute top-0"
-              src="/public/images/PhotoCover.svg"
-              alt=""
+              src={PhotoCover}
+              alt="PhotoCover"
             />
           </div>
           <div>

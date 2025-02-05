@@ -1,3 +1,4 @@
+import HeroPhoto from "/public/images/Frame 155.png";
 function HeroSection() {
   return (
     <section className="my-16">
@@ -21,7 +22,7 @@ function HeroSection() {
             Get Accepted in top companies{" "}
           </h2>
           <div className="flex justify-center mt-10 p-8">
-            <img className="" src="/public/images/Frame 155.png" alt="" />
+            <img loading="lazy" className="" src={HeroPhoto} alt="HeroPhoto" />
           </div>
         </div>
       </div>
