@@ -4,7 +4,7 @@ import SharedNavbar from "../SharedNavbar/SharedNavbar";
 function LoggedOutNavbar() {
   return (
     <nav className="bg-white sticky z-20 top-0">
-      <div className="container mx-auto p-4 flex justify-between items-center">
+      <div className="container mx-auto py-4 flex justify-between items-center px-2">
         <Link className="font-bold text-3xl" to="/">
           StepUp
         </Link>

@@ -2,6 +2,7 @@ import { Helmet } from "react-helmet-async";
 import HeroSection from "../../components/HomeGuest/HeroSection/HeroSection";
 import AboutStudent from "../../components/HomeGuest/AboutHome/AboutStudent";
 import AboutCompany from "../../components/HomeGuest/AboutHome/AboutCompany";
+import Faq from "../../components/HomeGuest/Faq/Faq";
 
 function HomePage() {
   return (
@@ -16,6 +17,7 @@ function HomePage() {
         <HeroSection />
         <AboutStudent />
         <AboutCompany />
+        <Faq />
       </main>
     </div>
   );

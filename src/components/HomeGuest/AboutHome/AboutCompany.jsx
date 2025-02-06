@@ -1,24 +1,26 @@
-import cover from "/public/images/Cover.png";
-import PhotoCover from "/public/images/PhotoCover.svg";
+import cover from "/public/images/Group 217.svg";
+// import PhotoCover from "/public/images/PhotoCover.webp";
+import FirstFrame from "/public/images/FirstFrame.webp";
+import SecondFrame from "/public/images/SecoundFrame.webp";
 function AboutCompany() {
   return (
     <section className="">
-      <div className="container mx-auto">
-        <div className=" py-7 px-2 flex justify-between items-center">
+      <div className="container mx-auto px-2">
+        <div className=" py-7 px-2 flex md:justify-between justify-center flex-wrap md:flex-nowrap items-center">
           <div className="relative">
-            <img loading="lazy" src={cover} alt="Cover" />
             <img
+              className="xl:w-[651px] xl:h-[496px] md:w-[324px] md:h-[245.6px] w-[343px] h-[260px]"
               loading="lazy"
-              className="absolute top-0"
-              src={PhotoCover}
-              alt="PhotoCover"
+              decoding="async"
+              src={cover}
+              alt="Cover"
             />
           </div>
           <div>
-            <h2 className="font-[rubik] tracking-[-0.25px] font-semibold text-5xl">
+            <h2 className="font-[rubik] tracking-[-0.25px] font-semibold md:text-5xl text-4xl">
               For companies
             </h2>
-            <ul className="list-disc text-[25px] font-[roboto] text-[#010318] ms-10 leading-[67px] mt-6 font-medium">
+            <ul className="list-disc xl:text-[22px] lg:text-[18px] md:text-[15px] font-[roboto] text-[#010318] md:ms-10 ms-7 flex flex-col gap-4 mt-6 font-medium">
               <li>Hire candidates prepared to meet your needs.</li>
               <li>Build your brand among top students.</li>
               <li>Quickly fill positions with motivated applicants.</li>
@@ -30,6 +32,27 @@ function AboutCompany() {
                 Join Now
               </button>
             </div>
+          </div>
+        </div>
+        <div className="mt-24">
+          <h2 className="text-center font-[rubik] tracking-[-0.21px] font-semibold text-5xl py-5">
+            How it works
+          </h2>
+          <div className="flex items-center gap-24 justify-center mt-14 w-full flex-col">
+            <img
+              className="xl:w-[1152px] xl:h-[108px] md:w-[753px] w-[643px]"
+              loading="lazy"
+              src={FirstFrame}
+              decoding="async"
+              alt="FirstFrame"
+            />
+            <img
+              className="xl:w-[627px] xl:h-[94px] md:w-[452px] w-[300px] "
+              loading="lazy"
+              src={SecondFrame}
+              decoding="async"
+              alt="SecondFrame"
+            />
           </div>
         </div>
       </div>
