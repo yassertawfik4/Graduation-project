@@ -20,16 +20,21 @@ function SharedNavbar() {
     },
   ];
   return (
-    <ul className="flex gap-2">
+    <ul className="flex lg:flex-row flex-col gap-5 lg:gap-2">
       {links.map((link, index) => (
-        <li key={index}>
+        <li
+          key={index}
+          className={`w-full text-center cursor-pointer transition ease-in-out duration-200 ${
+            link.isActive ? "bg-[#3A4C59]" : ""
+          }`}
+        >
           <NavLink
             to={link.path}
             className={({ isActive }) =>
-              `text-[16px] py-2 px-4 rounded-lg font-medium transition ease-in-out duration-200 hover:bg-[#3A4C59] hover:text-[#F3F3F3]  hover:rounded-lg ${
+              `text-[16px] w-full block py-2 px-4 rounded-lg font-medium transition ease-in-out duration-200 ${
                 isActive
-                  ? "border border-[#3A4C59] bg-[#3A4C59] text-[#F3F3F3]   "
-                  : "text-black"
+                  ? "bg-[#3A4C59] text-[#F3F3F3]"
+                  : "text-black hover:bg-[#3A4C59] hover:text-[#F3F3F3]"
               }`
             }
           >

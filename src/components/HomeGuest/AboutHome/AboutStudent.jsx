@@ -1,10 +1,11 @@
 import StudentImage from "/public/images/Group 205.webp";
+
 function AboutStudent() {
   return (
-    <section className="my-32">
+    <section className="my-32 relative overflow-hidden">
       <div className="container mx-auto px-2">
         <div className=" py-7 px-3 flex md:justify-between items-center justify-center flex-wrap md:flex-nowrap">
-          <div>
+          <div data-aos="fade-right">
             <h2 className="font-[rubik] tracking-[-0.25px] font-semibold md:text-5xl text-4xl">
               For students
             </h2>
@@ -21,7 +22,7 @@ function AboutStudent() {
               </button>
             </div>
           </div>
-          <div>
+          <div data-aos="fade-left">
             <img
               loading="lazy"
               className="xl:w-[540.07px] xl:h-[530.06px] md:w-[320px] md:h-[308px] w-[343px] h-[330px]"

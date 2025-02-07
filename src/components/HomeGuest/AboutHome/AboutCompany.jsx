@@ -1,13 +1,15 @@
-import cover from "/public/images/Group 217.svg";
+import cover from "/public/images/Group 217.webp";
 // import PhotoCover from "/public/images/PhotoCover.webp";
 import FirstFrame from "/public/images/FirstFrame.webp";
 import SecondFrame from "/public/images/SecoundFrame.webp";
+
 function AboutCompany() {
+ 
   return (
-    <section className="">
+    <section className="relative overflow-hidden">
       <div className="container mx-auto px-2">
         <div className=" py-7 px-2 flex md:justify-between justify-center flex-wrap md:flex-nowrap items-center">
-          <div className="relative">
+          <div className="relative" data-aos="fade-right">
             <img
               className="xl:w-[651px] xl:h-[496px] md:w-[324px] md:h-[245.6px] w-[343px] h-[260px]"
               loading="lazy"
@@ -16,7 +18,7 @@ function AboutCompany() {
               alt="Cover"
             />
           </div>
-          <div>
+          <div data-aos="fade-left">
             <h2 className="font-[rubik] tracking-[-0.25px] font-semibold md:text-5xl text-4xl">
               For companies
             </h2>
@@ -28,13 +30,13 @@ function AboutCompany() {
               <li>Collaborate with students on real projects.</li>
             </ul>
             <div className="py-5">
-              <button className="border-2  text-[24px] font-[roboto] cursor-pointer transition ease-in-out duration-200 hover:bg-white hover:text-[#3A4C59] border-[#3A4C59] font-medium bg-[#3A4C59] text-white py-1 px-4 rounded-lg">
+              <button className="border-2 md:text-[24px] text-[18px] font-[roboto] cursor-pointer transition ease-in-out duration-200 hover:bg-white hover:text-[#3A4C59] border-[#3A4C59] font-medium bg-[#3A4C59] text-white py-1 px-4 rounded-lg">
                 Join Now
               </button>
             </div>
           </div>
         </div>
-        <div className="mt-24">
+        <div className="mt-24" data-aos="fade-up">
           <h2 className="text-center font-[rubik] tracking-[-0.21px] font-semibold text-5xl py-5">
             How it works
           </h2>
