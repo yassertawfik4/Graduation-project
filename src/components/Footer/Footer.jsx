@@ -60,7 +60,7 @@ function Footer() {
             <h3 className="font-rubik font-bold text-sm md:text-xl lg:text-[28px]">
               platform
             </h3>
-            <ul className="mt-3 ml-8 flex flex-col gap-4 text-[9px] sm:text-[13px] md:text-[15px] lg:text-xl font-bold list-disc">
+            <ul className="mt-3 md:ml-8 ml-4 flex flex-col gap-4 text-[10px] sm:text-[13px] md:text-[15px] lg:text-xl font-bold list-disc">
               <li>For companies</li>
               <li>For Students</li>
               <li>
