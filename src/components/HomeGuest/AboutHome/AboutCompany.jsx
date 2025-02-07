@@ -64,7 +64,7 @@ function AboutCompany() {
             ) : (
               <>
                 <img
-                  className="w-[343px]"
+                  className="w-[303px]"
                   loading="lazy"
                   src={mobileFrame}
                   decoding="async"
