@@ -39,7 +39,7 @@ function Faq() {
           className="bg-[rgba(58,76,89,0.15)] flex md:justify-between justify-center flex-wrap md:flex-nowrap items-center p-14 rounded-lg"
         >
           <div className="md:w-[400px] order-2 md:order-1">
-            <h2 className="font-[roboto] xl:text-[32px] md:text-[28px] text-[22px] tracking-[3.75px] font-bold text-[#010318]">
+            <h2 className="font-[roboto] xl:text-[32px] md:text-[28px] text-[20px] tracking-[3.75px] font-bold text-[#010318]">
               Get matched with great internships
             </h2>
             <p className="font-[roboto] mt-7 xl:text-[32px] md:text-[28px] text-[20px] tracking-[3.75%] font-bold text-[#010318]">
