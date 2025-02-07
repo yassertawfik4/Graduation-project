@@ -2,7 +2,7 @@ import StudentImage from "/public/images/Group 205.webp";
 
 function AboutStudent() {
   return (
-    <section className="my-32 relative overflow-hidden">
+    <section className="my-16 relative overflow-hidden">
       <div className="container mx-auto px-2">
         <div className=" py-7 px-3 flex md:justify-between items-center justify-center flex-wrap md:flex-nowrap">
           <div data-aos="fade-right">

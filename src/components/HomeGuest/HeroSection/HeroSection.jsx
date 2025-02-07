@@ -15,7 +15,7 @@ function HeroSection() {
       <div className="container mx-auto px-2">
         <div className="flex md:justify-between justify-center items-center flex-wrap md:flex-nowrap  ">
           <div data-aos="fade-right" className="">
-            <h1 className="xl:text-[50px] md:text-[34px] sm:text-[40px] text-[30px] tracking-[3.75px] font-[rubik] font-bold text-[#010318]">
+            <h1 className="xl:text-[50px] md:text-[34px] sm:text-[40px] text-[29px] tracking-[3.75px] font-[rubik] font-bold text-[#010318]">
               Welcome to <br /> Step<span className="text-[#3A4C59]">Up</span>{" "}
               community
             </h1>
@@ -40,7 +40,7 @@ function HeroSection() {
             <img
               loading="lazy"
               decoding="async"
-              className=""
+              className="w-full"
               src={HeroPhoto}
               alt="HeroPhoto"
             />

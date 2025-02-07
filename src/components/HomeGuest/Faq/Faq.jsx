@@ -48,7 +48,7 @@ function Faq() {
           </div>
           <div className="order-1 md:order-2 md:my-0 mb-14">
             <img
-              className="xl:w-[684px] md:w-[466px] h-auto w-[343px] md:mt-0 mt-10"
+              className="xl:w-[684px] md:w-[466px] h-auto w-[400px] md:mt-0 mt-10"
               src={FaqPhoto}
               decoding="async"
               loading="lazy"

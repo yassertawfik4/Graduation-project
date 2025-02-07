@@ -2,9 +2,12 @@ import cover from "/public/images/Group 217.webp";
 // import PhotoCover from "/public/images/PhotoCover.webp";
 import FirstFrame from "/public/images/FirstFrame.webp";
 import SecondFrame from "/public/images/SecoundFrame.webp";
+import mobileFrame from "/public/images/FrameMobile.png";
+import useWindowSize from "../../../hooks/useWindowSize";
 
 function AboutCompany() {
- 
+  const { width } = useWindowSize();
+
   return (
     <section className="relative overflow-hidden">
       <div className="container mx-auto px-2">
@@ -41,20 +44,34 @@ function AboutCompany() {
             How it works
           </h2>
           <div className="flex items-center gap-24 justify-center mt-14 w-full flex-col">
-            <img
-              className="xl:w-[1152px] xl:h-[108px] md:w-[753px] w-[643px]"
-              loading="lazy"
-              src={FirstFrame}
-              decoding="async"
-              alt="FirstFrame"
-            />
-            <img
-              className="xl:w-[627px] xl:h-[94px] md:w-[452px] w-[300px] "
-              loading="lazy"
-              src={SecondFrame}
-              decoding="async"
-              alt="SecondFrame"
-            />
+            {width > 768 ? (
+              <>
+                <img
+                  className="xl:w-[1152px] xl:h-[108px] md:w-[753px] w-[643px]"
+                  loading="lazy"
+                  src={FirstFrame}
+                  decoding="async"
+                  alt="FirstFrame"
+                />
+                <img
+                  className="xl:w-[627px] xl:h-[94px] md:w-[452px] w-[300px] "
+                  loading="lazy"
+                  src={SecondFrame}
+                  decoding="async"
+                  alt="SecondFrame"
+                />
+              </>
+            ) : (
+              <>
+                <img
+                  className="w-[343px]"
+                  loading="lazy"
+                  src={mobileFrame}
+                  decoding="async"
+                  alt="FirstFrame"
+                />
+              </>
+            )}
           </div>
         </div>
       </div>
