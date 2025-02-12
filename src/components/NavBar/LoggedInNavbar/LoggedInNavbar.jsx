@@ -1,10 +1,8 @@
 import SharedNavbar from "../SharedNavbar/SharedNavbar";
 import { Link, NavLink } from "react-router-dom";
 import { IoPersonOutline } from "react-icons/io5";
-import { useState } from "react";
 
 function LoggedInNavbar() {
-  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <nav className=" sticky top-0">

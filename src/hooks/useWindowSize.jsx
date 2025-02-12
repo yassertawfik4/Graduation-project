@@ -16,7 +16,6 @@ function useWindowSize() {
 
     window.addEventListener("resize", handleResize);
 
-    // تنظيف الـ event listener عند تفكيك المكون
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 

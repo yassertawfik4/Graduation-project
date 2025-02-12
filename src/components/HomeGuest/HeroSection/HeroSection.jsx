@@ -40,7 +40,7 @@ function HeroSection() {
             <img
               loading="lazy"
               decoding="async"
-              className="w-full"
+              className="w-[1000px]"
               src={HeroPhoto}
               alt="HeroPhoto"
             />

@@ -9,8 +9,8 @@ function LoggedOutNavbar() {
     <nav className="bg-white sticky z-20 top-0 shadow-sm">
       <div className="container mx-auto py-4 flex justify-between items-center px-4">
         {/* Logo */}
-        <Link to="/" className="font-bold text-3xl text-[#3A4C59]">
-          Step<span className="text-black">Up</span>
+        <Link to="/" className="font-bold text-3xl text-black ">
+          Step<span className="text-[#3A4C59]">Up</span>
         </Link>
 
         {/* Navigation and Actions Container */}
@@ -25,13 +25,13 @@ function LoggedOutNavbar() {
             {/* Action Buttons */}
             <div className="flex items-center gap-4">
               <NavLink
-                to="/login"
+                to="/user/login"
                 className="border border-[#3A4C59] text-[#3A4C59] md:text-[17px] text-[13px] font-medium py-2 md:px-6 px-3 rounded-lg hover:bg-[#F3F3F3] transition duration-200"
               >
                 Login
               </NavLink>
               <NavLink
-                to="/register"
+                to="/user/register"
                 className="bg-[#3A4C59] text-white font-medium py-2 md:px-6 px-3 md:text-[17px] text-[13px] rounded-lg hover:bg-opacity-90 transition duration-200"
               >
                 Sign up

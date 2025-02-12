@@ -5,7 +5,7 @@ function AboutStudent() {
     <section className="my-16 relative overflow-hidden">
       <div className="container mx-auto px-2">
         <div className=" py-7 px-3 flex md:justify-between items-center justify-center flex-wrap md:flex-nowrap">
-          <div data-aos="fade-right">
+          <div data-aos="fade-right" className="order-2 md:order-1">
             <h2 className="font-[rubik] tracking-[-0.25px] font-semibold md:text-5xl text-4xl">
               For students
             </h2>
@@ -22,7 +22,7 @@ function AboutStudent() {
               </button>
             </div>
           </div>
-          <div data-aos="fade-left">
+          <div data-aos="fade-left" className="order-1 md:order-2">
             <img
               loading="lazy"
               className="xl:w-[540.07px] xl:h-[530.06px] md:w-[320px] md:h-[308px] w-[343px] h-[330px]"
