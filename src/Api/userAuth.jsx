@@ -12,10 +12,9 @@ export const userLogin = async (email, password) => {
     console.log("User Login", error);
   }
 };
-export const userRegister = async (name, username, email, password) => {
+export const userRegister = async (username, email, password) => {
   try {
     const response = await axiosInstance.post("/user/register", {
-      name,
       username,
       email,
       password,

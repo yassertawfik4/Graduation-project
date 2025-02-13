@@ -7,8 +7,9 @@ import { LuEyeClosed } from "react-icons/lu";
 import { MdOutlineEmail } from "react-icons/md";
 import { PiEye } from "react-icons/pi";
 import { userLogin } from "../../../Api/userAuth";
-import { FaLock } from "react-icons/fa";
+import { FaGithub, FaLock } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { FaGoogle } from "react-icons/fa6";
 function UserLogin() {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -39,7 +40,7 @@ function UserLogin() {
       const data = await userLogin(values.email, values.password);
       console.log(data);
 
-      toast.success("تم تسجيل الدخول بنجاح!", {
+      toast.success("You have successfully logged in!", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -49,7 +50,7 @@ function UserLogin() {
         theme: "light",
       });
     } catch (error) {
-      toast.error("فشل تسجيل الدخول. يرجى المحاولة مرة أخرى.", {
+      toast.error("Login failed. Please try again.", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -79,8 +80,8 @@ function UserLogin() {
           pauseOnHover
           theme="light"
         />
-        <div className="flex justify-center gap-24 w-[1032px] rounded-xl py-20 bg-[rgba(153,153,153,0.2)]">
-          <div className="w-[444px]">
+        <div className="flex justify-center gap-24 lg:w-[1032px] w-[600px] rounded-xl md:py-20 py-10 bg-[rgba(153,153,153,0.2)]">
+          <div className="w-[444px] lg:block hidden">
             <img
               className="w-[444px] h-[444px]"
               src={loginPhoto}
@@ -89,7 +90,7 @@ function UserLogin() {
               alt="login Photo"
             />
           </div>
-          <div className="bg-white w-[436px] rounded-xl">
+          <div className="bg-white md:w-[436px] w-[343px] rounded-xl">
             <h2 className="font-[rubik] font-semibold text-3xl text-center py-5 text-[#010318CC]">
               Welcome back
             </h2>
@@ -181,9 +182,15 @@ function UserLogin() {
                       </div>
                     </div>
                     <div className="text-center my-2">
-                      <p className="text-[13px] text-blue-500 font-[rubik] font-medium">
-                        Not a part of our community ? 
-                        <Link to="/user/register" className="underline"> Create an account</Link>
+                      <p className="text-[13px] font-[rubik] font-medium">
+                        Not a part of our community ?
+                        <Link
+                          to="/user/register"
+                          className="underline text-blue-500 "
+                        >
+                          {" "}
+                          Create an account
+                        </Link>
                       </p>
                     </div>
                     {/* 📌 زر تسجيل الدخول */}
@@ -196,6 +203,21 @@ function UserLogin() {
                     >
                       {isSubmitting ? "Logging in..." : "Log in"}
                     </button>
+                    <div className="text-center pb-7">
+                      <h3 className="font-[rubik] text-[#010318] opacity-80">
+                        Or sign up using
+                      </h3>
+                      <div className="flex justify-center items-center gap-4 pt-5">
+                        <FaGithub
+                          size={30}
+                          className="text-[£3A4C59] opacity-80 cursor-pointer"
+                        />
+                        <FaGoogle
+                          size={30}
+                          className="text-[£3A4C59] opacity-80 cursor-pointer"
+                        />
+                      </div>
+                    </div>
                   </Form>
                 )}
               </Formik>
