@@ -3,7 +3,7 @@ import LoggedInNavbar from "../LoggedInNavbar/LoggedInNavbar";
 import LoggedOutNavbar from "../LoggedOutNavbar/LoggedOutNavbar";
 
 function NavbarContainer() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   //   useEffect(() => {
   //     const token = localStorage.getItem("accessTokenUser");
   //     setIsLoggedIn(!!token);

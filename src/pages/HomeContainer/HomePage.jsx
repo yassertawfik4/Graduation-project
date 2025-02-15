@@ -3,8 +3,16 @@ import HeroSection from "../../components/HomeGuest/HeroSection/HeroSection";
 import AboutStudent from "../../components/HomeGuest/AboutHome/AboutStudent";
 import AboutCompany from "../../components/HomeGuest/AboutHome/AboutCompany";
 import Faq from "../../components/HomeGuest/Faq/Faq";
+import { useState } from "react";
+import HeroSectionUser from "../../components/HomeUser/HeroSection/HeroSectionUser";
+import RecommendedInternshipSlider from "../../components/HomeUser/RecommendedInternshipSlider/RecommendedInternshipSlider";
 
 function HomePage() {
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  //   useEffect(() => {
+  //     const token = localStorage.getItem("accessTokenUser");
+  //     setIsLoggedIn(!!token);
+  //   }, []);
   return (
     <div className="">
       <Helmet>
@@ -14,10 +22,19 @@ function HomePage() {
         <meta property="og:description" content="Welcome to the best website" />
       </Helmet>
       <main>
-        <HeroSection />
-        <AboutStudent />
-        <AboutCompany />
-        <Faq />
+        {isLoggedIn ? (
+          <>
+            <HeroSectionUser />
+            <RecommendedInternshipSlider />
+          </>
+        ) : (
+          <>
+            <HeroSection />
+            <AboutStudent />
+            <AboutCompany />
+            <Faq />
+          </>
+        )}
       </main>
     </div>
   );

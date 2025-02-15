@@ -80,7 +80,7 @@ function UserLogin() {
           pauseOnHover
           theme="light"
         />
-        <div className="flex justify-center gap-24 lg:w-[1032px] w-[600px] rounded-xl md:py-20 py-10 bg-[rgba(153,153,153,0.2)]">
+        <div className="flex justify-center gap-24 lg:w-[1032px] w-[600px] rounded-xl md:py-20 py-10 shadow-2xl lg:shadow-none md:bg-[rgba(153,153,153,0.2)]">
           <div className="w-[444px] lg:block hidden">
             <img
               className="w-[444px] h-[444px]"
