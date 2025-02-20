@@ -47,7 +47,7 @@ const ResetPassword = () => {
             validate={validate}
             onSubmit={handleSubmit}
           >
-            {({ isSubmitting ,values }) => (
+            {({ isSubmitting }) => (
               <Form className="mt-5">
                 <div className="relative w-full my-5">
                   <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xl" />
@@ -57,7 +57,7 @@ const ResetPassword = () => {
                     placeholder="Password"
                     className="w-full py-2 px-10 border border-[#010318] rounded-lg font-medium"
                   />
-                  
+
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
@@ -78,6 +78,7 @@ const ResetPassword = () => {
                     placeholder="Confirm Password"
                     className="w-full py-2 px-10 border border-[#010318] rounded-lg font-medium"
                   />
+
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
