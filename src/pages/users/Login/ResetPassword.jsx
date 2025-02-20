@@ -47,7 +47,7 @@ const ResetPassword = () => {
             validate={validate}
             onSubmit={handleSubmit}
           >
-            {({ isSubmitting }) => (
+            {({ isSubmitting ,values }) => (
               <Form className="mt-5">
                 <div className="relative w-full my-5">
                   <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xl" />
