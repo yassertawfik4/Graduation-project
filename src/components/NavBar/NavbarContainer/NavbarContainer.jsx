@@ -3,11 +3,12 @@ import LoggedInNavbar from "../LoggedInNavbar/LoggedInNavbar";
 import LoggedOutNavbar from "../LoggedOutNavbar/LoggedOutNavbar";
 
 function NavbarContainer() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-  //   useEffect(() => {
-  //     const token = localStorage.getItem("accessTokenUser");
-  //     setIsLoggedIn(!!token);
-  //   }, []);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    const token = localStorage.getItem("accessUsertoken");
+    setIsLoggedIn(token);
+    console.log(token);
+  }, []);
   return isLoggedIn ? <LoggedInNavbar /> : <LoggedOutNavbar />;
 }
 

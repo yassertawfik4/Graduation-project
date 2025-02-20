@@ -8,11 +8,11 @@ import { MdOutlineEmail } from "react-icons/md";
 import { PiEye } from "react-icons/pi";
 import { userLogin } from "../../../Api/userAuth";
 import { FaGithub, FaLock } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa6";
 function UserLogin() {
   const [showPassword, setShowPassword] = useState(false);
-
+  const navigate = useNavigate();
   const initialValues = {
     email: "",
     password: "",
@@ -39,16 +39,31 @@ function UserLogin() {
     try {
       const data = await userLogin(values.email, values.password);
       console.log(data);
+      if (data) {
+        localStorage.setItem("accessUsertoken", data);
 
-      toast.success("You have successfully logged in!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "light",
-      });
+        toast.success("You have successfully logged in!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "light",
+        });
+
+        navigate("/");
+      } else {
+        toast.error("Login failed. Please try again.", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "light",
+        });
+      }
     } catch (error) {
       toast.error("Login failed. Please try again.", {
         position: "top-right",
@@ -103,7 +118,6 @@ function UserLogin() {
               >
                 {({ values, errors, touched, isSubmitting }) => (
                   <Form className="flex flex-col gap-4">
-                    {/* 📌 حقل البريد الإلكتروني */}
                     <div className="relative">
                       <Field
                         type="email"
@@ -124,7 +138,6 @@ function UserLogin() {
                       )}
                     </div>
 
-                    {/* 📌 حقل كلمة المرور مع أيقونة العين */}
                     <div className="relative">
                       <div className="relative">
                         <Field
@@ -156,7 +169,6 @@ function UserLogin() {
                         </div>
                       )}
                     </div>
-                    {/* 📌 Forget Password*/}
                     <div className="flex justify-between">
                       <div className="flex items-center">
                         <Field
@@ -174,7 +186,7 @@ function UserLogin() {
                       </div>
                       <div>
                         <Link
-                          to="/forgetPassword"
+                          to="/user/forgetPassword"
                           className="text-[14px] font-medium font-[rubik] text-[#010318CC] underline"
                         >
                           Forget Password
@@ -193,7 +205,6 @@ function UserLogin() {
                         </Link>
                       </p>
                     </div>
-                    {/* 📌 زر تسجيل الدخول */}
                     <button
                       type="submit"
                       disabled={isSubmitting}

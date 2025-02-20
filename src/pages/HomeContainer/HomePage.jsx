@@ -3,16 +3,17 @@ import HeroSection from "../../components/HomeGuest/HeroSection/HeroSection";
 import AboutStudent from "../../components/HomeGuest/AboutHome/AboutStudent";
 import AboutCompany from "../../components/HomeGuest/AboutHome/AboutCompany";
 import Faq from "../../components/HomeGuest/Faq/Faq";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import HeroSectionUser from "../../components/HomeUser/HeroSection/HeroSectionUser";
 import RecommendedInternshipSlider from "../../components/HomeUser/RecommendedInternshipSlider/RecommendedInternshipSlider";
+import RoadMapHomeSlider from "../../components/HomeUser/RoadMapHome/RoadMapHomeSlider";
 
 function HomePage() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-  //   useEffect(() => {
-  //     const token = localStorage.getItem("accessTokenUser");
-  //     setIsLoggedIn(!!token);
-  //   }, []);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    const token = localStorage.getItem("accessUsertoken");
+    setIsLoggedIn(token);
+  }, []);
   return (
     <div className="">
       <Helmet>
@@ -26,6 +27,7 @@ function HomePage() {
           <>
             <HeroSectionUser />
             <RecommendedInternshipSlider />
+            <RoadMapHomeSlider />
           </>
         ) : (
           <>

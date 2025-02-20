@@ -1,35 +1,81 @@
 import SharedNavbar from "../SharedNavbar/SharedNavbar";
-import { Link, NavLink } from "react-router-dom";
-import { IoPersonOutline } from "react-icons/io5";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { IoExitOutline, IoPersonOutline, IoPersonSharp } from "react-icons/io5";
+import { useEffect, useRef, useState } from "react";
+import { logOut } from "../../../Api/userAuth";
 
 function LoggedInNavbar() {
   const [isOpen, setIsOpen] = useState(false);
-
+  const [isShow, setIsShow] = useState(false);
+  const dropdownRef = useRef(null);
+  const navigate = useNavigate();
+  const handleLogOut = async () => {
+    try {
+      const data = await logOut();
+      console.log(data);
+      if (data) {
+        localStorage.removeItem("accessUsertoken");
+        navigate("/user/login");
+      }
+    } catch (error) {
+      console.log("User LogOut", error);
+    }
+  };
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsShow(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   return (
     <nav className="bg-white sticky z-20 top-0 shadow-sm">
       <div className="container mx-auto py-4 flex justify-between items-center px-4">
-        {/* Logo */}
         <Link to="/" className="font-bold text-3xl text-black ">
           Step<span className="text-[#3A4C59]">Up</span>
         </Link>
 
-        {/* Navigation and Actions Container */}
         <div className="flex items-center gap-6">
-          {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-6">
             <SharedNavbar />
           </div>
 
-          {/* Login and Register Links */}
           <div className="flex items-center gap-4">
-            {/* Action Buttons */}
-            <div className="flex items-center gap-4">
-              <IoPersonOutline className="cursor-pointer" size={25} />
+            <div className="relative" ref={dropdownRef}>
+              <IoPersonOutline
+                className="cursor-pointer text-gray-700 "
+                size={25}
+                onClick={() => setIsShow(!isShow)}
+              />
+
+              {isShow && (
+                <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-md border border-gray-200 py-2 transition-opacity duration-300">
+                  <ul className="text-gray-700">
+                    <li className="px-4 py-2 flex items-center gap-2 hover:bg-gray-100 cursor-pointer font-medium font-[roboto] text-[15px]">
+                      Profile
+                      <span className="">
+                        <IoPersonSharp className="font-bold" size={17} />{" "}
+                      </span>
+                    </li>
+                    <li
+                      className="px-4 py-2 flex items-center gap-2 hover:bg-gray-100 cursor-pointer border-t border-gray-200 font-medium font-[roboto] text-[15px]"
+                      onClick={() => handleLogOut()}
+                    >
+                      Log Out{" "}
+                      <span className="">
+                        <IoExitOutline className="font-bold" size={17} />{" "}
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Mobile Menu Toggle */}
           <button
             onClick={() => setIsOpen(!isOpen)}
             type="button"
@@ -70,7 +116,6 @@ function LoggedInNavbar() {
           </button>
         </div>
 
-        {/* Mobile Menu Dropdown */}
         {isOpen && (
           <div className="absolute top-full left-0 w-full bg-white shadow-md lg:hidden">
             <div className="container mx-auto px-4 py-4">

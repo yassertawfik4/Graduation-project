@@ -2,19 +2,23 @@ import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
-
-import RecommendedInternshipcard from "./RecommendedInternshipcard";
 import { FaArrowRight } from "react-icons/fa";
+import { RoadMapHomeCard } from "./RoadMapHomeCard";
 
-function RecommendedInternshipSlider() {
+function RoadMapHomeSlider() {
   return (
     <div className="my-16">
       <div className="container mx-auto">
         <div className="flex justify-between items-center">
           <h2 className="text-[#000000] font-bold font-[rubik] text-[38px] my-4">
-            Recommended for you
+            Mapping your road ahead
           </h2>
-          <p className="text-[#000000] flex items-center gap-2 font-[rubik] font-medium text-[17px]">view all <span><FaArrowRight /></span></p>
+          <p className="text-[#000000] flex items-center gap-2 font-[rubik] font-medium text-[17px]">
+            view all{" "}
+            <span>
+              <FaArrowRight />
+            </span>
+          </p>
         </div>
         <div>
           <Swiper
@@ -66,23 +70,23 @@ function RecommendedInternshipSlider() {
               1024: {
                 slidesPerView: 2.4,
                 slidesPerGroup: 2,
-                spaceBetween: 10,
+                spaceBetween: 20,
                 slidesOffsetBefore: 0,
                 slidesOffsetAfter: 0,
               },
             }}
           >
             <SwiperSlide>
-              <RecommendedInternshipcard />
+              <RoadMapHomeCard />
             </SwiperSlide>
             <SwiperSlide>
-              <RecommendedInternshipcard />
+              <RoadMapHomeCard />
             </SwiperSlide>
             <SwiperSlide>
-              <RecommendedInternshipcard />
+              <RoadMapHomeCard />
             </SwiperSlide>
             <SwiperSlide>
-              <RecommendedInternshipcard />
+              <RoadMapHomeCard />
             </SwiperSlide>
           </Swiper>
         </div>
@@ -91,4 +95,4 @@ function RecommendedInternshipSlider() {
   );
 }
 
-export default RecommendedInternshipSlider;
+export default RoadMapHomeSlider;

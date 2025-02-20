@@ -39,7 +39,6 @@ function LoggedOutNavbar() {
             </div>
           </div>
 
-          {/* Mobile Menu Toggle */}
           <button
             onClick={() => setIsOpen(!isOpen)}
             type="button"

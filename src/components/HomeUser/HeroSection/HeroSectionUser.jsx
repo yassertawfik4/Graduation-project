@@ -1,5 +1,4 @@
 import HeroUserLogin from "/public/images/HeroUserLogin.png";
-import HeroPhoto from "/public/images/Frame 155.webp";
 import "aos/dist/aos.css"; // Import AOS styles
 import AOS from "aos";
 import { useEffect, useState } from "react";
