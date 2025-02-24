@@ -1,39 +1,81 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Formik, Form, Field } from "formik";
 import { FaArrowRightLong, FaLock } from "react-icons/fa6";
-import { forgetPassword } from "../../../Api/userAuth";
+import { resetUserPassword } from "../../../Api/userAuth";
 import { toast, ToastContainer } from "react-toastify";
 import { PiEye } from "react-icons/pi";
 import { LuEyeClosed } from "react-icons/lu";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const ResetPassword = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isValid, setIsValid] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
+  const queryParams = new URLSearchParams(location.search);
+  const token = queryParams.get("token");
+  const email = queryParams.get("email");
+  const initialValues = {
+    email: email || "",
+    resetCode: token || "",
+    newPassword: "",
+    confirmPassword: "",
+  };
   const validate = (values) => {
     const errors = {};
-    if (!values.password) {
-      errors.password = "Password Is Required";
-    } else if (values.password.length < 6) {
-      errors.password = "Password must be at least 6 characters long";
+    if (!values.newPassword) {
+      errors.newPassword = "Password is required";
+    } else if (values.newPassword.length < 6) {
+      errors.newPassword = "Password must be at least 6 characters long";
+    }
+
+    if (!values.confirmPassword) {
+      errors.confirmPassword = "Confirm Password is required";
+    } else if (values.confirmPassword !== values.newPassword) {
+      errors.confirmPassword = "Passwords do not match";
     }
 
     return errors;
   };
   const handleSubmit = async (values, { setSubmitting }) => {
     setLoading(true);
-    const data = await forgetPassword(values.email);
-    if (data) {
-      toast.success("Request sent successfully, check your email", {
+    try {
+      const data = await resetUserPassword({
+        email: values.email,
+        resetCode: values.resetCode,
+        newPassword: values.newPassword,
+      });
+      if (data) {
+        toast.success("Update password successfully", {
+          position: "top-right",
+          autoClose: 2000,
+        });
+      }
+    } catch (error) {
+      toast.error("Failed to update password. Please try again.", {
         position: "top-right",
         autoClose: 2000,
       });
+      console.log(error);
+    } finally {
+      setLoading(false);
+      setSubmitting(false);
     }
-    setLoading(false);
-    setSubmitting(false);
   };
+  useEffect(() => {
+    if (token && email) {
+      setIsValid(true);
+    } else {
+      navigate("/user/login");
+    }
+  }, [token, email, navigate]);
 
+  if (!isValid) {
+    return null;
+  }
   return (
     <div className="flex justify-center items-center my-16">
       <ToastContainer position="top-right" autoClose={5000} />
@@ -43,11 +85,11 @@ const ResetPassword = () => {
             Enter your new password
           </h2>
           <Formik
-            initialValues={{ email: "" }}
+            initialValues={initialValues}
             validate={validate}
             onSubmit={handleSubmit}
           >
-            {({ isSubmitting }) => (
+            {({ isSubmitting, isValid, dirty, errors, touched }) => (
               <Form className="mt-5">
                 <div className="relative w-full my-5">
                   <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xl" />
@@ -57,7 +99,11 @@ const ResetPassword = () => {
                     placeholder="Password"
                     className="w-full py-2 px-10 border border-[#010318] rounded-lg font-medium"
                   />
-
+                  {errors.newPassword && touched.newPassword && (
+                    <div className="text-red-500 text-sm mt-1">
+                      {errors.newPassword}
+                    </div>
+                  )}
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
@@ -78,7 +124,11 @@ const ResetPassword = () => {
                     placeholder="Confirm Password"
                     className="w-full py-2 px-10 border border-[#010318] rounded-lg font-medium"
                   />
-
+                  {errors.confirmPassword && touched.confirmPassword && (
+                    <div className="text-red-500 text-sm mt-1">
+                      {errors.confirmPassword}
+                    </div>
+                  )}
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
@@ -92,7 +142,7 @@ const ResetPassword = () => {
                   </button>
                 </div>
                 <button
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !isValid || !dirty}
                   type="submit"
                   className="bg-[#3A4C59] text-white py-2 mt-4 flex justify-between w-full items-center px-5 rounded-lg"
                 >

@@ -47,7 +47,7 @@ const ForgetPassword = () => {
             validate={validate}
             onSubmit={handleSubmit}
           >
-            {({ isSubmitting }) => (
+            {({ isSubmitting, isValid, dirty }) => (
               <Form className="mt-5">
                 <div className="relative w-full">
                   <MdOutlineEmail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xl" />
@@ -60,9 +60,13 @@ const ForgetPassword = () => {
                 </div>
 
                 <button
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !isValid || !dirty}
                   type="submit"
-                  className="bg-[#3A4C59] text-white py-2 mt-4 flex justify-between w-full items-center px-5 rounded-lg"
+                  className={`bg-[#3A4C59] text-white py-2 mt-4 flex justify-between w-full items-center px-5 rounded-lg ${
+                    !isValid || !dirty
+                      ? "opacity-50 cursor-not-allowed"
+                      : "cursor-pointer"
+                  }`}
                 >
                   {loading ? "Loading..." : "Continue"}{" "}
                   {!loading && <FaArrowRightLong />}

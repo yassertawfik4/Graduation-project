@@ -6,22 +6,24 @@ export const userLogin = async (email, password) => {
       email,
       password,
     });
+    console.log(response);
     return response.data;
   } catch (error) {
     console.log("User Login", error);
   }
 };
-export const userRegister = async (username, email, password) => {
+export const userRegister = async (email, username, password) => {
   try {
     const response = await axiosInstance.post("Identity/Register", {
-      username,
       email,
+      username,
       password,
     });
-    localStorage.setItem("accessUsertoken", response.data.token);
+    console.log(response);
+    localStorage.setItem("userId", response.data);
     return response.data;
   } catch (error) {
-    console.log("User Register", error);
+    console.log("User Register", error.response?.data || error.message);
   }
 };
 
@@ -62,5 +64,19 @@ export const logOut = async () => {
     return response.data;
   } catch (error) {
     console.log("User LogOut", error);
+  }
+};
+
+export const completeProfile = async (values) => {
+  try {
+    const response = await axiosInstance.post("Student/profiles", values, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${localStorage.getItem("userId")}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log("completeProfile ", error);
   }
 };

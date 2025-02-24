@@ -4,12 +4,12 @@ import { ToastContainer, toast } from "react-toastify";
 import loginPhoto from "/public/images/loginPhoto.png";
 import { useState } from "react";
 import { LuEyeClosed } from "react-icons/lu";
-import { MdOutlineEmail } from "react-icons/md";
 import { PiEye } from "react-icons/pi";
 import { userLogin } from "../../../Api/userAuth";
 import { FaGithub, FaLock } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa6";
+import { MdEmail } from "react-icons/md";
 function UserLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -115,20 +115,16 @@ function UserLogin() {
                 validate={validate}
                 onSubmit={handleSubmit}
               >
-                {({ values, errors, touched, isSubmitting }) => (
+                {({ errors, touched, isSubmitting, isValid, dirty }) => (
                   <Form className="flex flex-col gap-4">
-                    <div className="relative">
+                    <div className="relative w-full">
+                      <MdEmail className="absolute left-3 top-6 transform -translate-y-1/2 text-gray-500 text-xl" />
                       <Field
                         type="email"
                         name="email"
-                        className="w-full p-2 border border-[#010318] opacity-80 rounded-lg mt-1"
+                        placeholder="Email"
+                        className="w-full py-2 px-10 border border-[#010318] opacity-80 rounded-lg mt-1"
                       />
-                      {!values.email && (
-                        <div className="absolute text-[#3A4C59] opacity-80 left-3 top-3 flex items-center gap-2 pointer-events-none transition-opacity duration-300">
-                          <MdOutlineEmail size={20} />
-                          <span className="font-[rubik]">Email</span>
-                        </div>
-                      )}
 
                       {errors.email && touched.email && (
                         <div className="text-red-500 text-sm mt-1">
@@ -139,17 +135,15 @@ function UserLogin() {
 
                     <div className="relative">
                       <div className="relative">
+                        <FaLock className="absolute left-3 top-6 transform -translate-y-1/2 text-gray-500 text-xl" />
+
                         <Field
                           type={showPassword ? "text" : "password"}
                           name="password"
-                          className="w-full p-2 border rounded mt-1 pr-10"
+                          placeholder="Password"
+                          className="w-full py-2 px-10 border rounded mt-1 pr-10"
                         />
-                        {!values.password && (
-                          <div className="absolute text-[#3A4C59] opacity-80 left-3 top-3 flex items-center gap-2 pointer-events-none transition-opacity duration-300">
-                            <FaLock size={20} />
-                            <span className="font-[rubik] ">Password</span>
-                          </div>
-                        )}
+
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
@@ -206,10 +200,16 @@ function UserLogin() {
                     </div>
                     <button
                       type="submit"
-                      disabled={isSubmitting}
-                      className="bg-[#3A4C59] text-white py-2 border-2 border-[#3A4C59] cursor-pointer 
-                      transition duration-300 ease-in-out rounded-lg font-[rubik] font-medium hover:bg-white hover:text-[#3A4C59]
-                       disabled:bg-gray-400"
+                      disabled={isSubmitting || !isValid || !dirty}
+                      className={`bg-[#3A4C59] text-white py-2 border-2 border-[#3A4C59] 
+                      transition duration-300 ease-in-out rounded-lg font-[rubik] font-medium 
+                       disabled:bg-gray-400
+                       ${
+                         !isValid || !dirty
+                           ? "opacity-50 cursor-not-allowed"
+                           : "cursor-pointer hover:bg-white hover:text-[#3A4C59]"
+                       }
+                       `}
                     >
                       {isSubmitting ? "Logging in..." : "Log in"}
                     </button>

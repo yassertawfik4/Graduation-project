@@ -1,8 +1,9 @@
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import NavbarContainer from "./components/NavBar/NavbarContainer/NavbarContainer";
 import { lazy, Suspense, useState, useEffect } from "react";
 import Footer from "./components/Footer/Footer";
 import Loaderpage from "./components/Loader/loaderpage";
+import ProfileDetailes from "./pages/StudentProfilePage/ProfileDetailes";
 
 const HomePage = lazy(() => import("./pages/HomeContainer/HomePage"));
 const UserLoginPage = lazy(() => import("./pages/users/Login/UserLogin"));
@@ -15,6 +16,7 @@ const ResetPassword = lazy(() => import("./pages/users/Login/ResetPassword"));
 function App() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation(); // 📍 للوصول للمسار الحالي
 
   useEffect(() => {
     setLoading(true);
@@ -26,10 +28,13 @@ function App() {
   if (loading) {
     return <Loaderpage />;
   }
-
+  const hideNavbarPaths = ["/studentProdile"];
+  const shouldHideNavbar = hideNavbarPaths.includes(location.pathname);
   return (
     <>
-      <NavbarContainer />
+      {/* عرض الـ Navbar فقط لو المسار غير موجود ضمن قائمة الإخفاء */}
+      {!shouldHideNavbar && <NavbarContainer />}
+
       <Suspense fallback={<Loaderpage />}>
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -39,8 +44,11 @@ function App() {
             <Route path="forgetPassword" element={<ForgetPassword />} />
             <Route path="reset-password" element={<ResetPassword />} />
           </Route>
+          <Route path="/studentProdile" element={<ProfileDetailes />} />
         </Routes>
       </Suspense>
+
+      {/* عرض Footer دايمًا */}
       <Footer />
     </>
   );

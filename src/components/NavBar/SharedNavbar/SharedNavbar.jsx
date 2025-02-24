@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 
 function SharedNavbar() {
-  const links = [
+   const links = [
     {
       label: "Home",
       path: "/",
