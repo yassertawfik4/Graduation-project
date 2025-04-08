@@ -67,16 +67,20 @@ export const logOut = async () => {
   }
 };
 
-export const completeProfile = async (values) => {
+export const completeProfile = async (profileData) => {
   try {
-    const response = await axiosInstance.post("Student/profiles", values, {
+    const response = await axiosInstance.post("Student/profiles", profileData, {
       headers: {
-        "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${localStorage.getItem("userId")}`,
+        "Content-Type": "application/json", // تحديد نوع المحتوى كـ JSON
+
       },
     });
+    console.log(response);
     return response.data;
   } catch (error) {
     console.log("completeProfile ", error);
+    // Return the error to allow proper handling
+    console.log(error);
   }
 };

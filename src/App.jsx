@@ -4,6 +4,7 @@ import { lazy, Suspense, useState, useEffect } from "react";
 import Footer from "./components/Footer/Footer";
 import Loaderpage from "./components/Loader/loaderpage";
 import ProfileDetailes from "./pages/StudentProfilePage/ProfileDetailes";
+import RoadMap from "./pages/RoadMap/RoadMap";
 
 const HomePage = lazy(() => import("./pages/HomeContainer/HomePage"));
 const UserLoginPage = lazy(() => import("./pages/users/Login/UserLogin"));
@@ -45,6 +46,7 @@ function App() {
             <Route path="reset-password" element={<ResetPassword />} />
           </Route>
           <Route path="/studentProdile" element={<ProfileDetailes />} />
+          <Route path="/Roadmaps" element={<RoadMap />} />
         </Routes>
       </Suspense>
 

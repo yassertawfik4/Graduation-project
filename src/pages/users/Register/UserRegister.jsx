@@ -8,16 +8,16 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
 function UserRegister() {
-  const [step, setStep] = useState(1);
-  const [userId, setUserId] = useState(null);
+  const [step, setStep] = useState(2);
   const [IsStudent, setIsStudent] = useState(false);
   const navigate = useNavigate();
+
   const initialValues = {
     username: "",
     email: "",
     password: "",
     fullName: "",
-    image: null,
+    profilePictureUrl: "",
     bio: "",
     age: "",
     phoneNumber: "",
@@ -27,11 +27,12 @@ function UserRegister() {
     graduationYear: "",
     enrollmentYear: "",
   };
+
   const handleNext = () => setStep((prev) => prev + 1);
   const handleSkip = () => setStep((prev) => prev + 1);
+
   const handleSkipWithValidation = (values, setErrors, setTouched) => {
     const errors = validate(values);
-
     if (Object.keys(errors).length > 0) {
       Swal.fire({
         icon: "error",
@@ -44,7 +45,6 @@ function UserRegister() {
           Object.keys(errors).forEach((field) => {
             touchedFields[field] = true;
           });
-
           setTouched(touchedFields);
           setErrors(errors);
         }
@@ -53,6 +53,7 @@ function UserRegister() {
       handleSkip();
     }
   };
+
   const validate = (values) => {
     const errors = {};
     if (step === 1) {
@@ -62,7 +63,6 @@ function UserRegister() {
     }
     if (step === 2) {
       if (!values.fullName) errors.fullName = "Full Name is required";
-
       if (!values.phoneNumber) {
         errors.phoneNumber = "Phone Number is required";
       } else if (!/^\d+$/.test(values.phoneNumber)) {
@@ -78,10 +78,11 @@ function UserRegister() {
       if (!values.graduationYear)
         errors.graduationYear = "Graduation Year Name Is Required";
       if (!values.enrollmentYear)
-        errors.enrollmentYear = " Entry Year Year Name Is Required";
+        errors.enrollmentYear = "Entry Year Year Name Is Required";
     }
     return errors;
   };
+
   const handleSubmit = async (values) => {
     try {
       if (step === 1) {
@@ -91,47 +92,45 @@ function UserRegister() {
           values.password
         );
         if (data) {
-          console.log(data);
-          setUserId(data);
           Swal.fire({
             icon: "success",
             title: "Registration Successful",
             text: "Proceed to complete your profile.",
           });
-          // if (IsStudent) {
-          //   navigate("/register/complete-student-profile");
-          // } else {
-          //   navigate("/register/complete-company-profile");
-          // }
           handleNext();
         } else {
           Swal.fire({
             icon: "error",
             title: "Oops...",
-            html: "<strong>Registration failed,Please try again.</strong>",
+            html: "<strong>Registration failed, Please try again.</strong>",
           });
         }
-        console.log("Registration successful:", data);
       } else {
-        const formData = new FormData();
-        formData.append("userId", userId);
-        for (const key in values) {
-          if (!["username", "email", "password"].includes(key)) {
-            formData.append(key, values[key]);
-          }
-        }
-        const response = await completeProfile(formData);
-        if (response && response.success) {
+        const profileData = {
+          fullName: values.fullName,
+          university: values.university,
+          faculty: values.faculty,
+          graduationYear: parseInt(values.graduationYear, 10),
+          enrollmentYear: parseInt(values.enrollmentYear, 10),
+          age: parseInt(values.age, 10),
+          gender: values.gender,
+          phoneNumber: values.phoneNumber,
+          bio: values.bio,
+          profilePictureUrl: values.profilePictureUrl,
+        };
+        const response = await completeProfile(profileData);
+        if (response) {
           Swal.fire({
             icon: "success",
             title: "Profile Completed!",
             text: "Your profile has been successfully updated.",
           });
         } else {
+          const errorMessage = response?.error || "Failed to complete profile.";
           Swal.fire({
             icon: "error",
             title: "Error",
-            text: "Failed to complete profile.",
+            text: errorMessage,
           });
         }
       }
@@ -144,10 +143,11 @@ function UserRegister() {
       });
     }
   };
+
   return (
     <div className="">
       <div className="container mx-auto px-2">
-        <div className=" md:bg-[rgba(153,153,153,0.2)] rounded-lg my-14">
+        <div className="md:bg-[rgba(153,153,153,0.2)] rounded-lg my-14">
           <Formik
             initialValues={initialValues}
             validate={validate}
@@ -181,6 +181,7 @@ function UserRegister() {
                     isSubmitting={isSubmitting}
                     isValid={isValid}
                     dirty={dirty}
+                    values={values}
                   />
                 )}
                 {step === 3 && (

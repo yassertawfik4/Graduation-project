@@ -1,8 +1,9 @@
-import { ErrorMessage, Field } from "formik";
+import { ErrorMessage, Field, useFormikContext } from "formik";
 import { FaArrowRight, FaPhoneAlt, FaUserTie } from "react-icons/fa";
 import profileimage from "/public/images/profileImage.png";
 import { AiFillExclamationCircle } from "react-icons/ai";
 import { useState } from "react";
+import Swal from "sweetalert2";
 function StudentFormTwo({
   handleNext,
   handleSkip,
@@ -10,13 +11,35 @@ function StudentFormTwo({
   isValid,
   dirty,
 }) {
+  const { setFieldValue, values } = useFormikContext(); // استخدام useFormikContext للوصول إلى الدوال والقيم
   const [previewImage, setPreviewImage] = useState(null);
+
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
+    const file = e.currentTarget.files[0];
     if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        Swal.fire({
+          icon: "error",
+          title: "File too large",
+          text: "Please upload an image smaller than 5MB.",
+        });
+        return;
+      }
+      if (!file.type.startsWith("image/")) {
+        Swal.fire({
+          icon: "error",
+          title: "Invalid file type",
+          text: "Please upload an image file.",
+        });
+        return;
+      }
+      setFieldValue("profilePictureUrl", file); 
+      console.log(file);
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPreviewImage(reader.result);
+        const base64Image = reader.result;
+        setFieldValue("profilePictureUrl", base64Image);
+        setPreviewImage(base64Image); 
       };
       reader.readAsDataURL(file);
     }
@@ -33,14 +56,16 @@ function StudentFormTwo({
               loading="lazy"
               decoding="async"
               className="w-[170px] h-[170px] rounded-full object-cover border"
-              src={previewImage || "/images/profileImage.png"}
+              src={
+                previewImage ||
+                values.profilePictureUrl ||
+                "/images/profileImage.png"
+              }
               alt="profile"
             />
-            {/* أيقونة الكاميرا فوق الصورة */}
             <div className="absolute bottom-2 right-2 bg-[#3A4C59] text-white p-2 rounded-full">
               📷
             </div>
-            {/* input file مخفي */}
             <input
               type="file"
               accept="image/*"
@@ -124,8 +149,8 @@ function StudentFormTwo({
             <option value="" disabled>
               Choose Gender
             </option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
           </Field>
         </div>
         <button

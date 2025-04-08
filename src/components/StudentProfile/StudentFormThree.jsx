@@ -73,10 +73,22 @@ function RegisterStepThree({
           <FaGraduationCap className="absolute left-3 top-6 transform -translate-y-1/2 text-gray-500 text-xl" />
           <div className="relative">
             <Field
-              type="date"
+              as="select"
               name="graduationYear"
               className="w-full py-2 px-10 border font-semibold border-[#010318] opacity-80 rounded-lg mt-1"
-            />
+            >
+              <option value="" disabled>
+                Select Graduation Year
+              </option>
+              {[...Array(50)].map((_, i) => {
+                const year = new Date().getFullYear() - i;
+                return (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                );
+              })}
+            </Field>
             {/* نجمة حمراء */}
             <span className="absolute right-3 top-1/2 transform -translate-y-1/2 font-bold text-red-500">
               *
@@ -98,10 +110,22 @@ function RegisterStepThree({
           <FaGraduationCap className="absolute left-3 top-6 transform -translate-y-1/2 text-gray-500 text-xl" />
           <div className="relative">
             <Field
-              type="date"
+              as="select"
               name="enrollmentYear"
               className="w-full py-2 px-10 border font-semibold border-[#010318] opacity-80 rounded-lg mt-1"
-            />
+            >
+              <option value="" disabled>
+                Select Year
+              </option>
+              {[...Array(50)].map((_, i) => {
+                const year = new Date().getFullYear() - i;
+                return (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                );
+              })}
+            </Field>
             {/* نجمة حمراء */}
             <span className="absolute right-3 top-1/2 transform -translate-y-1/2 font-bold text-red-500">
               *
