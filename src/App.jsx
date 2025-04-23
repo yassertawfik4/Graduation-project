@@ -5,6 +5,8 @@ import Footer from "./components/Footer/Footer";
 import Loaderpage from "./components/Loader/loaderpage";
 import ProfileDetailes from "./pages/StudentProfilePage/ProfileDetailes";
 import RoadMap from "./pages/RoadMap/RoadMap";
+import CompanyProfile from "./pages/CompanyProfile/CompanyProfile";
+import BookMarkPage from "./pages/BookMarkPage/BookMarkPage";
 
 const HomePage = lazy(() => import("./pages/HomeContainer/HomePage"));
 const UserLoginPage = lazy(() => import("./pages/users/Login/UserLogin"));
@@ -45,7 +47,10 @@ function App() {
             <Route path="forgetPassword" element={<ForgetPassword />} />
             <Route path="reset-password" element={<ResetPassword />} />
           </Route>
-          <Route path="/studentProdile" element={<ProfileDetailes />} />
+          <Route path="/profile/Me" element={<ProfileDetailes />} />
+          <Route path="/companyProfile" element={<CompanyProfile />} />
+          <Route path="/Bookmarks" element={<BookMarkPage />} />
+
           <Route path="/Roadmaps" element={<RoadMap />} />
         </Routes>
       </Suspense>

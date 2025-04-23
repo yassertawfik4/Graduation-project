@@ -20,7 +20,7 @@ export const userRegister = async (email, username, password) => {
       password,
     });
     console.log(response);
-    localStorage.setItem("userId", response.data);
+    localStorage.setItem("accessUsertoken", response.data);
     return response.data;
   } catch (error) {
     console.log("User Register", error.response?.data || error.message);
@@ -69,18 +69,15 @@ export const logOut = async () => {
 
 export const completeProfile = async (profileData) => {
   try {
-    const response = await axiosInstance.post("Student/profiles", profileData, {
+    const response = await axiosInstance.post("Student/Profiles", profileData, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("userId")}`,
-        "Content-Type": "application/json", // تحديد نوع المحتوى كـ JSON
-
+        Authorization: `Bearer ${localStorage.getItem("accessUsertoken")}`,
       },
     });
     console.log(response);
     return response.data;
   } catch (error) {
     console.log("completeProfile ", error);
-    // Return the error to allow proper handling
     console.log(error);
   }
 };

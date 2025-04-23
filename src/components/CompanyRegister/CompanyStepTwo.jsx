@@ -1,18 +1,18 @@
 import { ErrorMessage, Field, useFormikContext } from "formik";
-import { FaPhoneAlt, FaUserTie } from "react-icons/fa";
-import { AiFillExclamationCircle } from "react-icons/ai";
 import { useState } from "react";
+import { AiFillExclamationCircle } from "react-icons/ai";
+import { FaUserTie } from "react-icons/fa";
 import Swal from "sweetalert2";
-function StudentFormTwo({
+
+function CompanyStepTwo({
   handleNext,
   handleSkip,
   isSubmitting,
   isValid,
   dirty,
 }) {
-  const { setFieldValue, values } = useFormikContext(); // استخدام useFormikContext للوصول إلى الدوال والقيم
+  const { setFieldValue, values } = useFormikContext(); 
   const [previewImage, setPreviewImage] = useState(null);
-
   const handleImageChange = (e) => {
     const file = e.currentTarget.files[0];
     if (file) {
@@ -44,11 +44,13 @@ function StudentFormTwo({
     }
   };
   return (
-    <div className="w-[920px] relative flex items-center justify-center">
+    <div>
       <div className="w-[404px] px-5 py-10">
         <h2 className="font-[rubik] font-bold text-center text-3xl text-[#010318] py-5">
           Complete Profile{" "}
         </h2>
+        {/*image Company*/}
+
         <div className="flex items-center justify-center relative">
           <label className="cursor-pointer relative">
             <img
@@ -73,13 +75,15 @@ function StudentFormTwo({
             />
           </label>
         </div>
+        {/*name Company*/}
+
         <div className="relative w-full my-4">
           <FaUserTie className="absolute left-3 top-6 transform -translate-y-1/2 text-gray-500 text-xl" />
           <div className="relative">
             <Field
               type="text"
               name="fullName"
-              placeholder="Full Name"
+              placeholder="Company Name"
               className="w-full py-2 px-10 border font-semibold border-[#010318] opacity-80 rounded-lg mt-1"
             />
             {/* نجمة حمراء */}
@@ -97,61 +101,28 @@ function StudentFormTwo({
             )}
           />
         </div>
+        {/*address Company*/}
+
         <div className=" w-full my-4">
           <Field
             as="textarea"
-            name="bio"
-            id="bio"
-            placeholder="Tell us about yourself..."
+            name="address"
+            id="address"
+            placeholder="Address"
             className="w-full py-2 px-4 border font-semibold border-[#010318] opacity-80 rounded-lg mt-1"
           />
         </div>
-        <div className="relative w-full my-4">
+        {/*About Company*/}
+        <div className=" w-full my-4">
           <Field
-            type="number"
-            name="age"
-            min="15"
-            placeholder="Age"
+            as="textarea"
+            name="aboutus"
+            id="aboutus"
+            placeholder="About Us"
             className="w-full py-2 px-4 border font-semibold border-[#010318] opacity-80 rounded-lg mt-1"
           />
         </div>
-        <div className="relative w-full my-4">
-          <FaPhoneAlt className="absolute left-3 top-6 transform -translate-y-1/2 text-gray-500 text-xl" />
-          <Field
-            type="text" // بدل number بـ text
-            name="phoneNumber"
-            placeholder="Phone Number"
-            className="w-full py-2 px-10 border font-semibold border-[#010318] opacity-80 rounded-lg mt-1"
-          />
-          {/* نجمة حمراء */}
-          <span className="absolute right-3 top-6 transform -translate-y-1/2 font-bold text-red-500">
-            *
-          </span>
 
-          <ErrorMessage
-            name="phoneNumber"
-            render={(msg) => (
-              <div className="text-[14px] text-red-600 font-medium font-[roboto] flex gap-2 items-center my-1">
-                <AiFillExclamationCircle size={16} />
-                <span>{msg}</span>
-              </div>
-            )}
-          />
-        </div>
-        <div className="relative w-full my-4">
-          <FaUserTie className="absolute left-3 top-6 transform -translate-y-1/2 text-gray-500 text-xl" />
-          <Field
-            as="select"
-            name="gender"
-            className="w-full py-2 px-10 border font-semibold  border-[#010318] opacity-80 rounded-lg mt-1"
-          >
-            <option value="" disabled>
-              Choose Gender
-            </option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-          </Field>
-        </div>
         <button
           disabled={isSubmitting || !isValid || !dirty}
           type="button"
@@ -165,24 +136,8 @@ function StudentFormTwo({
           Continue
         </button>
       </div>
-      <div className="absolute top-0 text-end w-full px-20 pt-5">
-        {/* <button
-          className="border font-semibold py-2 px-2 border-[#3A4C59] cursor-pointer rounded-lg"
-          type="button"
-          onClick={handleNext}
-        >
-          <FaArrowRight />
-        </button> */}
-        <button
-          className="border font-semibold border-[#3A4C59] py-2 px-2 cursor-pointer rounded-lg"
-          type="button"
-          onClick={handleSkip}
-        >
-          Skip
-        </button>
-      </div>
     </div>
   );
 }
 
-export default StudentFormTwo;
+export default CompanyStepTwo;

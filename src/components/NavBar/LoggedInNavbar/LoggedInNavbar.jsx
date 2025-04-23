@@ -55,12 +55,15 @@ function LoggedInNavbar() {
               {isShow && (
                 <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-md border border-gray-200 py-2 transition-opacity duration-300">
                   <ul className="text-gray-700">
-                    <li className="px-4 py-2 flex items-center gap-2 hover:bg-gray-100 cursor-pointer font-medium font-[roboto] text-[15px]">
+                    <Link
+                      to={"/profile/Me"}
+                      className="px-4 py-2 flex items-center gap-2 hover:bg-gray-100 cursor-pointer font-medium font-[roboto] text-[15px]"
+                    >
                       Profile
                       <span className="">
                         <IoPersonSharp className="font-bold" size={17} />{" "}
                       </span>
-                    </li>
+                    </Link>
                     <li
                       className="px-4 py-2 flex items-center gap-2 hover:bg-gray-100 cursor-pointer border-t border-gray-200 font-medium font-[roboto] text-[15px]"
                       onClick={() => handleLogOut()}

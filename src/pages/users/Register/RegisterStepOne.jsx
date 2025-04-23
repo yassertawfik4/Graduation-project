@@ -14,12 +14,14 @@ function RegisterStepOne({ setIsStudent, handleSubmit }) {
 
   const { isSubmitting, isValid, dirty } = useFormikContext();
 
-  const handleStudentClick = () => {
+  const handleStudentClick = async () => {
     setIsStudent(true);
     setIsStudentSubmitting(true);
-    handleSubmit().finally(() => {
+    try {
+      await handleSubmit();
+    } finally {
       setIsStudentSubmitting(false);
-    });
+    }
   };
 
   const handleCompanyClick = () => {
@@ -32,8 +34,8 @@ function RegisterStepOne({ setIsStudent, handleSubmit }) {
 
   return (
     <div className="flex justify-center items-center gap-36">
-      <div className="w-[404px] px-5">
-        <h2 className="font-[rubik] font-bold text-center text-3xl text-[#010318] py-5">
+      <div className="sm:w-[404px] px-5">
+        <h2 className="font-[rubik] font-bold text-center sm:text-3xl text-xl text-[#010318] py-5">
           Create an account
         </h2>
 
@@ -157,7 +159,7 @@ function RegisterStepOne({ setIsStudent, handleSubmit }) {
         </div>
 
         {/* Social Sign Up */}
-        <div className="text-center pb-7">
+        <div className="text-center pb-7 pt-4">
           <h3 className="font-[rubik] text-[#010318] opacity-80">
             Or sign up using
           </h3>
@@ -175,7 +177,7 @@ function RegisterStepOne({ setIsStudent, handleSubmit }) {
       </div>
 
       {/* Right Side Image */}
-      <div>
+      <div className="lg:block hidden">
         <img
           loading="lazy"
           decoding="async"

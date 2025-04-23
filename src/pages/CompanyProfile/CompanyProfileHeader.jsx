@@ -1,34 +1,39 @@
 import { CiCamera } from "react-icons/ci";
-import studentprofile from "/public/images/dd.jpg";
+import companyLogo from "/public/images/profileImage.png";
 import { Link } from "react-router-dom";
 import { FaGithub, FaLinkedin, FaPen } from "react-icons/fa";
 import { IoIosLink } from "react-icons/io";
 import { useState, useRef } from "react";
 import { MdOutlineCancel } from "react-icons/md";
 
-function StudentProfileHeader({ data }) {
+function CompanyProfileHeader({ data }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [userData, setUserData] = useState({
-    name: "Yasser Tawfik",
-    jobTitle: "Front-End Developer",
-    bio: "Driven by a love for problem-solving and a keen eye for detail, I'm a front-end developer seeking an internship to expand my expertise. I'm committed to learning new technologies and contributing to a dynamic team while building impactful user interfaces.",
+  const [companyData, setCompanyData] = useState({
+    name: "Framer Technologies",
+    industry: "Design & Technology",
+    tagline:
+      "We believe in the power of design to transform ideas into impactful digital experiences. As a leading innovator in the tech industry, we specialize in creating intuitive and visually stunning tools that empower designers and developers.",
   });
 
   const [socialIcons, setSocialIcons] = useState([
-    { icon: <FaGithub size={28} />, url: "https://github.com", name: "GitHub" },
+    {
+      icon: <FaGithub size={28} />,
+      url: "https://github.com/framertech",
+      name: "GitHub",
+    },
     {
       icon: <IoIosLink size={28} />,
-      url: "https://portfolio.com",
-      name: "Portfolio",
+      url: "https://framer.com",
+      name: "Website",
     },
     {
       icon: <FaLinkedin size={28} />,
-      url: "https://linkedin.com",
+      url: "https://linkedin.com/company/framer",
       name: "LinkedIn",
     },
   ]);
 
-  const [profileImage, setProfileImage] = useState(studentprofile);
+  const [profileImage, setProfileImage] = useState(companyLogo);
   const fileInputRef = useRef(null);
 
   const availableIcons = [
@@ -39,7 +44,7 @@ function StudentProfileHeader({ data }) {
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
-    setUserData({ ...userData, [name]: value });
+    setCompanyData({ ...companyData, [name]: value });
   };
 
   const handleIconUrlChange = (index, newUrl) => {
@@ -58,7 +63,7 @@ function StudentProfileHeader({ data }) {
   };
 
   const handleSave = () => {
-    console.log("Saving data:", { userData, socialIcons });
+    console.log("Saving company data:", { companyData, socialIcons });
     setIsEditing(false);
   };
 
@@ -80,7 +85,7 @@ function StudentProfileHeader({ data }) {
   return (
     <div className="bg-white shadow rounded-lg p-6">
       <div className="relative">
-        <div className="h-[254px] relative bg-gradient-to-r from-[#C5C5C7] via-[#F3F3F3] to-[#8C8B8E]/81 rounded-tl-[70px]">
+        <div className="h-64 relative bg-gradient-to-r from-[#C5C5C7] via-[#F3F3F3] to-[#8C8B8E]/81 rounded-tl-[70px]">
           <button className="absolute right-4 bottom-4 bg-[#D2D2D3] py-2 px-5 rounded-lg shadow">
             <CiCamera size={25} className="text-white" />
           </button>
@@ -90,15 +95,14 @@ function StudentProfileHeader({ data }) {
           <div>
             <div className="flex items-center justify-between">
               <div
-                className="w-[160px] h-[160px] relative bottom-10 rounded-full border-4 border-white shadow-lg overflow-hidden cursor-pointer"
+                className="w-40 h-40 relative bottom-10 rounded-full border-4 border-white shadow-lg overflow-hidden cursor-pointer"
                 onClick={handleImageClick}
               >
                 <img
                   src={profileImage}
-                  alt="Profile"
+                  alt="Company Logo"
                   className="w-full h-full object-cover"
                 />
-                {/* أيقونة الكاميرا داخل الصورة */}
                 <div className="absolute bottom-2 right-2 bg-white p-2 rounded-full shadow-md">
                   <CiCamera size={20} className="text-gray-600" />
                 </div>
@@ -114,14 +118,14 @@ function StudentProfileHeader({ data }) {
               <div className="flex gap-2">
                 <button
                   onClick={handleSave}
-                  className="flex items-center justify-center gap-2 px-8 py-1 bg-[#3A4C59] border-2 border-[#3A4C59] text-white transition-all duration-300 ease-in-out cursor-pointer font-semibold rounded-md hover:bg-white hover:text-[#3A4C59]"
+                  className="flex items-center justify-center gap-2 px-8 py-1 bg-[#05302B] border-2 border-[#05302B] text-white transition-all duration-300 ease-in-out cursor-pointer font-semibold rounded-md hover:bg-white hover:text-[#05302B]"
                 >
                   Update
                 </button>
 
                 <button
                   onClick={() => setIsEditing(false)}
-                  className="flex items-center justify-center gap-2 px-8 py-1 border border-[#C51800] rounded-md  text-[#C51800] font-semibold cursor-pointer"
+                  className="flex items-center justify-center gap-2 px-8 py-1 border border-[#C51800] rounded-md text-[#C51800] font-semibold cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -133,25 +137,25 @@ function StudentProfileHeader({ data }) {
                 <div className="space-y-2">
                   <div>
                     <label className="block text-[17px] text-gray-600 font-bold mb-3">
-                      User Name
+                      Company Name
                     </label>
                     <input
                       type="text"
                       name="name"
-                      value={userData.name}
+                      value={companyData.name}
                       onChange={handleOnChange}
                       className="text-[#3A4C59] font-bold border outline-none border-[#C9C9C9] px-2 py-2 rounded-sm w-full"
                     />
                   </div>
                   <div>
                     <label className="block text-[17px] text-gray-600 font-bold my-3">
-                      Jopt Title
+                      Industry
                     </label>
                     <input
-                      name="jobTitle"
-                      value={userData.jobTitle}
+                      name="industry"
+                      value={companyData.industry}
                       onChange={handleOnChange}
-                      placeholder="Write something about you"
+                      placeholder="Your company's industry"
                       className="text-[#3A4C59] font-bold border outline-none border-[#C9C9C9] px-2 py-1 rounded-md w-full"
                     />
                   </div>
@@ -171,7 +175,7 @@ function StudentProfileHeader({ data }) {
                           handleIconUrlChange(index, e.target.value)
                         }
                         placeholder={`Enter ${social.name} URL`}
-                        className="border border-gray-300 px-2 py-3  rounded text-sm w-full"
+                        className="border border-gray-300 px-2 py-3 rounded text-sm w-full"
                       />
                       <button
                         onClick={() => handleRemoveIcon(index)}
@@ -209,17 +213,15 @@ function StudentProfileHeader({ data }) {
           </div>
         ) : (
           <div className="flex items-center justify-between">
-            {/* الصورة */}
             <div
-              className="w-[160px] h-[160px] relative bottom-10 rounded-full border-4 border-white shadow-lg overflow-hidden flex-shrink-0 cursor-pointer"
+              className="w-40 h-40 relative bottom-10 rounded-full border-4 border-white shadow-lg overflow-hidden flex-shrink-0 cursor-pointer"
               onClick={handleImageClick}
             >
               <img
                 src={profileImage}
-                alt="Profile"
+                alt="Company Logo"
                 className="w-full h-full object-cover"
               />
-              {/* أيقونة الكاميرا داخل الصورة */}
               <div className="absolute bottom-4 right-4 bg-white p-2 rounded-full shadow-md">
                 <CiCamera size={20} className="text-gray-600" />
               </div>
@@ -232,13 +234,13 @@ function StudentProfileHeader({ data }) {
               />
             </div>
 
-            <div className="flex flex-grow justify-between  ml-6">
+            <div className="flex flex-grow justify-between ml-6">
               <div className="flex flex-col gap-2 flex-grow mt-2">
                 <h2 className="text-3xl font-bold font-[roboto]">
-                  {data.fullName}
+                  {data?.name || companyData.name}
                 </h2>
                 <p className="text-[#3A4C59] font-bold max-w-[650px] break-words">
-                  {userData.jobTitle}
+                  {companyData.industry}
                 </p>
                 <div className="flex gap-3 mt-2 text-gray-600">
                   {socialIcons.map((social, index) => (
@@ -247,7 +249,7 @@ function StudentProfileHeader({ data }) {
                       to={social.url}
                       target="_blank"
                       title={social.name}
-                      className="cursor-pointer "
+                      className="cursor-pointer"
                     >
                       {social.icon}
                     </Link>
@@ -271,23 +273,23 @@ function StudentProfileHeader({ data }) {
           {isEditing ? (
             <div>
               <label className="block text-[22px] text-[#000000] font-bold my-3">
-                About
+                Company Description
               </label>
               <textarea
-                name="jobTitle"
-                value={userData.bio}
+                name="tagline"
+                value={companyData.tagline}
                 onChange={handleOnChange}
-                placeholder="Write something about you"
-                className="text-[#3A4C59] font-medium text-[16px] leading-7 border h-[162px] outline-none border-[#C9C9C9] px-2 py-1 rounded-md w-full"
+                placeholder="Write about your company"
+                className="text-[#3A4C59] font-medium text-[16px] leading-7 border h-40 outline-none border-[#C9C9C9] px-2 py-1 rounded-md w-full"
               />
             </div>
           ) : (
-            <div className=" rounded-xl w-full px-2 py-1">
-              <h2 className="block text-[22px] font-[roboto] text-[#000000] font-bold my-3 ">
+            <div className="rounded-xl w-full px-2 py-1">
+              <h2 className="block text-[22px] font-[roboto] text-[#000000] font-bold my-3">
                 About
               </h2>
               <p className="text-[#3A4C59] font-medium text-sm leading-6 pb-3">
-                {data.bio}
+                {data?.tagline || companyData.tagline}
               </p>
             </div>
           )}
@@ -295,9 +297,9 @@ function StudentProfileHeader({ data }) {
             <div className="flex justify-end my-3">
               <button
                 onClick={handleSave}
-                className="bg-[#3A4C59] text-white py-3 px-6 rounded-lg cursor-pointer font-[roboto] "
+                className="bg-[#05302B] text-white py-3 px-6 rounded-lg cursor-pointer font-[roboto]"
               >
-                save
+                Save
               </button>
             </div>
           )}
@@ -307,4 +309,4 @@ function StudentProfileHeader({ data }) {
   );
 }
 
-export default StudentProfileHeader;
+export default CompanyProfileHeader;

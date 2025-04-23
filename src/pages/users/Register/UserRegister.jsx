@@ -6,28 +6,40 @@ import StudentFormTwo from "../../../components/StudentProfile/StudentFormTwo";
 import StudentFormThree from "../../../components/StudentProfile/StudentFormThree";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import CompanyStepTwo from "../../../components/CompanyRegister/CompanyStepTwo";
+import CompanyStepThree from "../../../components/CompanyRegister/CompanyStepThree";
 
 function UserRegister() {
-  const [step, setStep] = useState(2);
-  const [IsStudent, setIsStudent] = useState(false);
+  const [step, setStep] = useState(1);
+  const [isStudent, setIsStudent] = useState(true);
   const navigate = useNavigate();
-
+  // Initial values for both student and company
   const initialValues = {
+    // Common fields
     username: "",
     email: "",
     password: "",
     fullName: "",
     profilePictureUrl: "",
     bio: "",
-    age: "",
     phoneNumber: "",
+
+    // Student specific fields
+    age: "",
     gender: "",
     university: "",
     faculty: "",
     graduationYear: "",
     enrollmentYear: "",
-  };
 
+    // Company specific fields
+    companyName: "",
+    companyLocation: "",
+    industry: "",
+    website: "",
+    companySize: "",
+    foundedYear: "",
+  };
   const handleNext = () => setStep((prev) => prev + 1);
   const handleSkip = () => setStep((prev) => prev + 1);
 
@@ -61,24 +73,50 @@ function UserRegister() {
       if (!values.email) errors.email = "Email is required";
       if (!values.password) errors.password = "Password is required";
     }
+
     if (step === 2) {
-      if (!values.fullName) errors.fullName = "Full Name is required";
-      if (!values.phoneNumber) {
-        errors.phoneNumber = "Phone Number is required";
-      } else if (!/^\d+$/.test(values.phoneNumber)) {
-        errors.phoneNumber = "Phone Number must contain only numbers";
-      } else if (!/^0\d{10}$/.test(values.phoneNumber)) {
-        errors.phoneNumber =
-          "Phone Number must start with 0 and be exactly 11 digits";
+      if (isStudent) {
+        // Student validation for step 2
+        if (!values.fullName) errors.fullName = "Full Name is required";
+        if (!values.phoneNumber) {
+          errors.phoneNumber = "Phone Number is required";
+        } else if (!/^\d+$/.test(values.phoneNumber)) {
+          errors.phoneNumber = "Phone Number must contain only numbers";
+        } else if (!/^0\d{10}$/.test(values.phoneNumber)) {
+          errors.phoneNumber =
+            "Phone Number must start with 0 and be exactly 11 digits";
+        }
+      } else {
+        // Company validation for step 2
+        if (!values.companyName)
+          errors.companyName = "Company Name is required";
+        if (!values.industry) errors.industry = "Industry is required";
+        if (!values.phoneNumber) {
+          errors.phoneNumber = "Phone Number is required";
+        } else if (!/^\d+$/.test(values.phoneNumber)) {
+          errors.phoneNumber = "Phone Number must contain only numbers";
+        }
       }
     }
+
     if (step === 3) {
-      if (!values.university) errors.university = "University Name Is Required";
-      if (!values.faculty) errors.faculty = "Major Name Is Required";
-      if (!values.graduationYear)
-        errors.graduationYear = "Graduation Year Name Is Required";
-      if (!values.enrollmentYear)
-        errors.enrollmentYear = "Entry Year Year Name Is Required";
+      if (isStudent) {
+        // Student validation for step 3
+        if (!values.university)
+          errors.university = "University Name Is Required";
+        if (!values.faculty) errors.faculty = "Major Name Is Required";
+        if (!values.graduationYear)
+          errors.graduationYear = "Graduation Year Name Is Required";
+        if (!values.enrollmentYear)
+          errors.enrollmentYear = "Entry Year Year Name Is Required";
+      } else {
+        // Company validation for step 3
+        if (!values.website) errors.website = "Website is Required";
+        if (!values.companyLocation)
+          errors.companyLocation = "Company Location Is Required";
+        if (!values.foundedYear)
+          errors.foundedYear = "Founded Year Is Required";
+      }
     }
     return errors;
   };
@@ -106,18 +144,36 @@ function UserRegister() {
           });
         }
       } else {
-        const profileData = {
-          fullName: values.fullName,
-          university: values.university,
-          faculty: values.faculty,
-          graduationYear: parseInt(values.graduationYear, 10),
-          enrollmentYear: parseInt(values.enrollmentYear, 10),
-          age: parseInt(values.age, 10),
-          gender: values.gender,
-          phoneNumber: values.phoneNumber,
-          bio: values.bio,
-          profilePictureUrl: values.profilePictureUrl,
-        };
+        // Prepare profile data based on user type
+        let profileData;
+
+        if (isStudent) {
+          profileData = {
+            fullName: values.fullName,
+            university: values.university,
+            faculty: values.faculty,
+            graduationYear: parseInt(values.graduationYear, 10),
+            enrollmentYear: parseInt(values.enrollmentYear, 10),
+            age: parseInt(values.age, 10),
+            gender: values.gender,
+            phoneNumber: values.phoneNumber,
+            bio: values.bio,
+            profilePictureUrl: values.profilePictureUrl,
+          };
+        } else {
+          profileData = {
+            companyName: values.companyName,
+            industry: values.industry,
+            website: values.website,
+            companyLocation: values.companyLocation,
+            foundedYear: parseInt(values.foundedYear, 10),
+            companySize: values.companySize,
+            phoneNumber: values.phoneNumber,
+            bio: values.bio,
+            profilePictureUrl: values.profilePictureUrl,
+          };
+        }
+
         const response = await completeProfile(profileData);
         if (response) {
           Swal.fire({
@@ -125,6 +181,7 @@ function UserRegister() {
             title: "Profile Completed!",
             text: "Your profile has been successfully updated.",
           });
+          navigate("/");
         } else {
           const errorMessage = response?.error || "Failed to complete profile.";
           Swal.fire({
@@ -147,7 +204,7 @@ function UserRegister() {
   return (
     <div className="">
       <div className="container mx-auto px-2">
-        <div className="md:bg-[rgba(153,153,153,0.2)] rounded-lg my-14">
+        <div className="bg-[rgba(153,153,153,0.2)] rounded-lg my-14">
           <Formik
             initialValues={initialValues}
             validate={validate}
@@ -172,7 +229,7 @@ function UserRegister() {
                     setIsStudent={setIsStudent}
                   />
                 )}
-                {step === 2 && (
+                {step === 2 && isStudent && (
                   <StudentFormTwo
                     handleNext={handleNext}
                     handleSkip={() =>
@@ -184,8 +241,30 @@ function UserRegister() {
                     values={values}
                   />
                 )}
-                {step === 3 && (
+                {step === 2 && !isStudent && (
+                  <CompanyStepTwo
+                    handleNext={handleNext}
+                    handleSkip={() =>
+                      handleSkipWithValidation(values, setErrors, setTouched)
+                    }
+                    isSubmitting={isSubmitting}
+                    isValid={isValid}
+                    dirty={dirty}
+                    values={values}
+                  />
+                )}
+                {step === 3 && isStudent && (
                   <StudentFormThree
+                    isSubmitting={isSubmitting}
+                    isValid={isValid}
+                    dirty={dirty}
+                    handleSkip={() =>
+                      handleSkipWithValidation(values, setErrors, setTouched)
+                    }
+                  />
+                )}
+                {step === 3 && !isStudent && (
+                  <CompanyStepThree
                     isSubmitting={isSubmitting}
                     isValid={isValid}
                     dirty={dirty}
