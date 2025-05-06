@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FaPen } from "react-icons/fa";
 
-function StudentEducation() {
+function StudentEducation({ data }) {
   const [isEditing, setIsEditing] = useState(false);
   const [educationData, setEducationData] = useState({
     uniName: "Cairo University",
@@ -125,36 +125,36 @@ function StudentEducation() {
           <div>
             <p className="text-[#8D9499] font-semibold">University Name</p>
             <p className="text-[#3A4C59] font-semibold">
-              {educationData.uniName}
+              {data?.basicInfo?.university}
             </p>
 
             <p className="text-[#8D9499] font-semibold mt-4">Major</p>
             <p className="text-[#3A4C59] font-semibold">
-              {educationData.major}
+              {data?.basicInfo?.faculty}
             </p>
 
             <p className="text-[#8D9499] font-semibold mt-4">Entry Year</p>
             <p className="text-[#3A4C59] font-semibold">
-              {educationData.entryYear}
+              {data?.basicInfo?.enrollmentYear}
             </p>
           </div>
 
           <div>
             <p className="text-[#8D9499] font-semibold">Faculty Name</p>
             <p className="text-[#3A4C59] font-semibold">
-              {educationData.facultyName}
+              {data?.basicInfo?.faculty}
             </p>
 
             <p className="text-[#8D9499] font-semibold mt-4">Track</p>
             <p className="text-[#3A4C59] font-semibold">
-              {educationData.track}
+              {data?.basicInfo?.faculty}
             </p>
 
             <p className="text-[#8D9499] font-semibold mt-4">
               Graduation Year (Expected)
             </p>
             <p className="text-[#3A4C59] font-semibold">
-              {educationData.graduationYear}
+              {data?.basicInfo?.graduationYear}
             </p>
           </div>
         </div>

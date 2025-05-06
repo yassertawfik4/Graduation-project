@@ -11,7 +11,7 @@ function CompanyStepTwo({
   isValid,
   dirty,
 }) {
-  const { setFieldValue, values } = useFormikContext(); 
+  const { setFieldValue, values } = useFormikContext();
   const [previewImage, setPreviewImage] = useState(null);
   const handleImageChange = (e) => {
     const file = e.currentTarget.files[0];
@@ -76,13 +76,12 @@ function CompanyStepTwo({
           </label>
         </div>
         {/*name Company*/}
-
         <div className="relative w-full my-4">
           <FaUserTie className="absolute left-3 top-6 transform -translate-y-1/2 text-gray-500 text-xl" />
           <div className="relative">
             <Field
               type="text"
-              name="fullName"
+              name="companyName"
               placeholder="Company Name"
               className="w-full py-2 px-10 border font-semibold border-[#010318] opacity-80 rounded-lg mt-1"
             />
@@ -92,7 +91,7 @@ function CompanyStepTwo({
             </span>
           </div>
           <ErrorMessage
-            name="fullName"
+            name="companyName"
             render={(msg) => (
               <div className="text-[14px] text-red-500 font-medium font-[roboto] flex gap-2 items-center my-1">
                 <AiFillExclamationCircle size={16} />
@@ -101,25 +100,55 @@ function CompanyStepTwo({
             )}
           />
         </div>
-        {/*address Company*/}
+        {/*Tax Id Company*/}
 
-        <div className=" w-full my-4">
-          <Field
-            as="textarea"
-            name="address"
-            id="address"
-            placeholder="Address"
-            className="w-full py-2 px-4 border font-semibold border-[#010318] opacity-80 rounded-lg mt-1"
+        <div className="relative w-full my-4">
+          <FaUserTie className="absolute left-3 top-6 transform -translate-y-1/2 text-gray-500 text-xl" />
+          <div className="relative">
+            <Field
+              type="text"
+              name="taxId"
+              placeholder="taxId"
+              className="w-full py-2 px-10 border font-semibold border-[#010318] opacity-80 rounded-lg mt-1"
+            />
+            {/* نجمة حمراء */}
+            <span className="absolute right-3 top-1/2 transform -translate-y-1/2 font-bold text-red-500">
+              *
+            </span>
+          </div>
+          <ErrorMessage
+            name="taxId"
+            render={(msg) => (
+              <div className="text-[14px] text-red-500 font-medium font-[roboto] flex gap-2 items-center my-1">
+                <AiFillExclamationCircle size={16} />
+                <span>{msg}</span>
+              </div>
+            )}
           />
         </div>
-        {/*About Company*/}
-        <div className=" w-full my-4">
-          <Field
-            as="textarea"
-            name="aboutus"
-            id="aboutus"
-            placeholder="About Us"
-            className="w-full py-2 px-4 border font-semibold border-[#010318] opacity-80 rounded-lg mt-1"
+        {/*governorate Company*/}
+        <div className="relative w-full my-4">
+          <FaUserTie className="absolute left-3 top-6 transform -translate-y-1/2 text-gray-500 text-xl" />
+          <div className="relative">
+            <Field
+              type="text"
+              name="governorate"
+              placeholder="governorate"
+              className="w-full py-2 px-10 border font-semibold border-[#010318] opacity-80 rounded-lg mt-1"
+            />
+            {/* نجمة حمراء */}
+            <span className="absolute right-3 top-1/2 transform -translate-y-1/2 font-bold text-red-500">
+              *
+            </span>
+          </div>
+          <ErrorMessage
+            name="governorate"
+            render={(msg) => (
+              <div className="text-[14px] text-red-500 font-medium font-[roboto] flex gap-2 items-center my-1">
+                <AiFillExclamationCircle size={16} />
+                <span>{msg}</span>
+              </div>
+            )}
           />
         </div>
 

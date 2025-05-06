@@ -1,7 +1,27 @@
 import { FaArrowRight } from "react-icons/fa";
 import roadmapImage from "/public/images/roadmap.png";
+import { useEffect, useState } from "react";
+import axiosInstance from "../../Api/axiosInstance";
+import { Link } from "react-router-dom";
 
 function RoadMap() {
+  const [roadmaps, setRoadmaps] = useState([]);
+  const handelGetAllRoudmaps = async () => {
+    try {
+      const response = await axiosInstance.get(`Roadmap/public`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessUsertoken")}`,
+        },
+      });
+      setRoadmaps(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    handelGetAllRoudmaps();
+  }, []);
   return (
     <div className="my-4">
       <div className="container mx-auto px-3">
@@ -26,18 +46,21 @@ function RoadMap() {
             Choose Your path
           </h2>
           <div className="grid grid-cols-2 gap-12 my-14">
-            <div className="font-[Rubik] border-l-8 shadow-sm rounded-xl border-[#095544] border-b-14 rounded-l-xl rounded-br-xl rounded-b-none text-[32px] text-center text-[#032221] font-bold">
-              <div className="flex justify-between rounded-xl cursor-pointer text-[#095544] p-8 bg-white">
-                <h2 className="text-[#021B1A]">Frontend</h2>
-                <FaArrowRight />
+            {roadmaps.map((item) => (
+              <div
+                key={item.id}
+                className="font-[Rubik] border-l-8 shadow-sm rounded-xl border-[#095544] border-b-14 rounded-l-xl rounded-br-xl rounded-b-none text-[32px] text-center text-[#032221] font-bold"
+              >
+                <Link
+                  onClick={() => console.log(item.id)}
+                  to={`/roadmap/${item.id}`}
+                  className="flex justify-between rounded-xl cursor-pointer text-[#095544] p-8 bg-white"
+                >
+                  <h2 className="text-[#021B1A]">{item.title}</h2>
+                  <FaArrowRight />
+                </Link>
               </div>
-            </div>
-            <div className="font-[Rubik] border-l-8 shadow-sm rounded-xl border-[#095544] border-b-14 rounded-l-xl rounded-br-xl rounded-b-none text-[32px] text-center text-[#032221] font-bold">
-              <div className="flex justify-between rounded-xl text-[#095544] p-8 bg-white">
-                <h2 className="text-[#021B1A]">Frontend</h2>
-                <FaArrowRight />
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>

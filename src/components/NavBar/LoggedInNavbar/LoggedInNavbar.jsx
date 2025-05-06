@@ -1,5 +1,5 @@
 import SharedNavbar from "../SharedNavbar/SharedNavbar";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { IoExitOutline, IoPersonOutline, IoPersonSharp } from "react-icons/io5";
 import { useEffect, useRef, useState } from "react";
 import { logOut } from "../../../Api/userAuth";
@@ -7,6 +7,8 @@ import { logOut } from "../../../Api/userAuth";
 function LoggedInNavbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isShow, setIsShow] = useState(false);
+  const studentid = localStorage.getItem("studentId");
+  const companyid = localStorage.getItem("companyId");
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
   const handleLogOut = async () => {
@@ -15,6 +17,11 @@ function LoggedInNavbar() {
       console.log(data);
       if (data) {
         localStorage.removeItem("accessUsertoken");
+        localStorage.removeItem("studentId");
+        localStorage.removeItem("isStudent");
+        localStorage.removeItem("isCompany");
+        localStorage.removeItem("companyId");
+
         navigate("/user/login");
       }
     } catch (error) {
@@ -55,15 +62,28 @@ function LoggedInNavbar() {
               {isShow && (
                 <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-md border border-gray-200 py-2 transition-opacity duration-300">
                   <ul className="text-gray-700">
-                    <Link
-                      to={"/profile/Me"}
-                      className="px-4 py-2 flex items-center gap-2 hover:bg-gray-100 cursor-pointer font-medium font-[roboto] text-[15px]"
-                    >
-                      Profile
-                      <span className="">
-                        <IoPersonSharp className="font-bold" size={17} />{" "}
-                      </span>
-                    </Link>
+                    {localStorage.getItem("isStudent") && (
+                      <Link
+                        to={`/profile/${studentid}`}
+                        className="px-4 py-2 flex items-center gap-2 hover:bg-gray-100 cursor-pointer font-medium font-[roboto] text-[15px]"
+                      >
+                        Profile
+                        <span className="">
+                          <IoPersonSharp className="font-bold" size={17} />{" "}
+                        </span>
+                      </Link>
+                    )}
+                    {localStorage.getItem("isCompany") && (
+                      <Link
+                        to={`/company/${companyid}`}
+                        className="px-4 py-2 flex items-center gap-2 hover:bg-gray-100 cursor-pointer font-medium font-[roboto] text-[15px]"
+                      >
+                        Profile
+                        <span className="">
+                          <IoPersonSharp className="font-bold" size={17} />{" "}
+                        </span>
+                      </Link>
+                    )}
                     <li
                       className="px-4 py-2 flex items-center gap-2 hover:bg-gray-100 cursor-pointer border-t border-gray-200 font-medium font-[roboto] text-[15px]"
                       onClick={() => handleLogOut()}

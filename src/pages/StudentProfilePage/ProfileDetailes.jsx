@@ -10,15 +10,20 @@ import StudentProjects from "./studentPrfileComponents/StudentProjects";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../Api/axiosInstance";
 function ProfileDetailes() {
-  const [myProfile, setMyProfile] = useState([]);
+  const [myProfile, setMyProfile] = useState({});
+  const studentid = localStorage.getItem("studentId");
+
   const handleGetProfile = async () => {
     try {
-      const response = await axiosInstance.get(`Student/profiles/basic/me`, {
-        headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMTk2M2FiYy0yNDljLTdhYmUtODAwYi1lZmEyOGUzZjVlNDAiLCJlbWFpbCI6Inlhc3NlcnRpdG82ODJAZ21haWwuY29tIiwibmFtZSI6Inlhenp6IiwianRpIjoiOWViNmVhOTQtNWNiZC00ZjljLWFiMjYtMDk1NGIxZTIzMTI2IiwiYXVkIjpbIlN3YWdnZXJVSSIsIlN3YWdnZXJVSSJdLCJuYmYiOjE3NDQ3NDIyNTYsImV4cCI6MTc0NTM0NzA1NiwiaWF0IjoxNzQ0NzQyMjU2LCJpc3MiOiJJbnRlcm5zaGlwLVBsYXRmb3JtIn0.NWzMLbQ6a8uULZcl2y3XpHfgZmOy5X9nUUFcYSzjv5Y`,
-        },
-      });
-      console.log(response);
+      const response = await axiosInstance.get(
+        `Student/profiles/${studentid}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessUsertoken")}`,
+          },
+        }
+      );
+      console.log(response.data);
       setMyProfile(response.data);
     } catch (error) {
       console.error("Failed to fetch profile:", error);
@@ -40,22 +45,22 @@ function ProfileDetailes() {
           <StudentProfileHeader data={myProfile} />
 
           {/* Personal Information */}
-          <StudentPersonalInformation />
+          <StudentPersonalInformation data={myProfile} />
 
           {/* Education */}
-          <StudentEducation />
+          <StudentEducation data={myProfile} />
 
           {/* Skills */}
-          <StudentSkills />
+          <StudentSkills data={myProfile} />
 
           {/* CV/Resume Section */}
           <StudentResume />
 
           {/* Experiences Section */}
-          <StudentExperiences />
+          <StudentExperiences data={myProfile} />
 
           {/* Projects Section */}
-          <StudentProjects />
+          <StudentProjects data={myProfile} />
         </div>
       </div>
     </div>

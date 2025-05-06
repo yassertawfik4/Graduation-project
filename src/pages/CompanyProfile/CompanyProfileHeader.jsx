@@ -5,8 +5,9 @@ import { FaGithub, FaLinkedin, FaPen } from "react-icons/fa";
 import { IoIosLink } from "react-icons/io";
 import { useState, useRef } from "react";
 import { MdOutlineCancel } from "react-icons/md";
+import PropTypes from "prop-types";
 
-function CompanyProfileHeader({ data }) {
+function CompanyProfileHeader({ company }) {
   const [isEditing, setIsEditing] = useState(false);
   const [companyData, setCompanyData] = useState({
     name: "Framer Technologies",
@@ -237,10 +238,10 @@ function CompanyProfileHeader({ data }) {
             <div className="flex flex-grow justify-between ml-6">
               <div className="flex flex-col gap-2 flex-grow mt-2">
                 <h2 className="text-3xl font-bold font-[roboto]">
-                  {data?.name || companyData.name}
+                  {company?.basicInfo?.companyName || "Company Name"}
                 </h2>
                 <p className="text-[#3A4C59] font-bold max-w-[650px] break-words">
-                  {companyData.industry}
+                  {company?.basicInfo?.industry || "Industry Type"}
                 </p>
                 <div className="flex gap-3 mt-2 text-gray-600">
                   {socialIcons.map((social, index) => (
@@ -289,7 +290,7 @@ function CompanyProfileHeader({ data }) {
                 About
               </h2>
               <p className="text-[#3A4C59] font-medium text-sm leading-6 pb-3">
-                {data?.tagline || companyData.tagline}
+                {company?.tagline || companyData.tagline}
               </p>
             </div>
           )}
@@ -308,5 +309,20 @@ function CompanyProfileHeader({ data }) {
     </div>
   );
 }
+
+CompanyProfileHeader.propTypes = {
+  company: PropTypes.shape({
+    basicInfo: PropTypes.shape({
+      companyName: PropTypes.string,
+      industry: PropTypes.string,
+    }),
+    tagline: PropTypes.string,
+    address: PropTypes.shape({
+      street: PropTypes.string,
+      city: PropTypes.string,
+      governorate: PropTypes.string,
+    }),
+  }),
+};
 
 export default CompanyProfileHeader;

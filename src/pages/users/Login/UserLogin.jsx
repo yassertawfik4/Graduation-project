@@ -5,7 +5,7 @@ import loginPhoto from "/public/images/loginPhoto.png";
 import { useState } from "react";
 import { LuEyeClosed } from "react-icons/lu";
 import { PiEye } from "react-icons/pi";
-import { userLogin } from "../../../Api/userAuth";
+import { fetchStudentProfile, userLogin } from "../../../Api/userAuth";
 import { FaGithub, FaLock } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa6";
@@ -40,7 +40,15 @@ function UserLogin() {
       const data = await userLogin(values.email, values.password);
       console.log(data);
       if (data) {
-        localStorage.setItem("accessUsertoken", data);
+        localStorage.setItem("accessUsertoken", data.token);
+        if (data.userType === "Student") {
+          localStorage.setItem("isStudent", data.userType);
+          localStorage.setItem("studentId", data.profileId);
+        } else {
+          localStorage.setItem("companyId", data.profileId);
+
+          localStorage.setItem("isCompany", data.userType);
+        }
 
         toast.success("You have successfully logged in!", {
           position: "top-right",
@@ -51,6 +59,7 @@ function UserLogin() {
           draggable: true,
           theme: "light",
         });
+        await fetchStudentProfile(); // هنا بنجيب ونخزن studentId
 
         navigate("/");
       } else {

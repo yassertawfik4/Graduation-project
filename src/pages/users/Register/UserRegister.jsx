@@ -1,5 +1,9 @@
 import { Form, Formik } from "formik";
-import { completeProfile, userRegister } from "../../../Api/userAuth";
+import {
+  completeCompanyProfile,
+  completeStudentProfile,
+  userRegister,
+} from "../../../Api/userAuth";
 import RegisterStepOne from "./RegisterStepOne";
 import { useState } from "react";
 import StudentFormTwo from "../../../components/StudentProfile/StudentFormTwo";
@@ -19,12 +23,12 @@ function UserRegister() {
     username: "",
     email: "",
     password: "",
-    fullName: "",
-    profilePictureUrl: "",
-    bio: "",
-    phoneNumber: "",
 
     // Student specific fields
+    fullName: "",
+    profilePictureUrl: "https://localhost:3000", // Fixed the URL format here
+    bio: "",
+    phoneNumber: "+2",
     age: "",
     gender: "",
     university: "",
@@ -34,11 +38,11 @@ function UserRegister() {
 
     // Company specific fields
     companyName: "",
-    companyLocation: "",
+    taxId: "",
+    governorate: "",
+    city: "",
+    street: "",
     industry: "",
-    website: "",
-    companySize: "",
-    foundedYear: "",
   };
   const handleNext = () => setStep((prev) => prev + 1);
   const handleSkip = () => setStep((prev) => prev + 1);
@@ -90,12 +94,9 @@ function UserRegister() {
         // Company validation for step 2
         if (!values.companyName)
           errors.companyName = "Company Name is required";
-        if (!values.industry) errors.industry = "Industry is required";
-        if (!values.phoneNumber) {
-          errors.phoneNumber = "Phone Number is required";
-        } else if (!/^\d+$/.test(values.phoneNumber)) {
-          errors.phoneNumber = "Phone Number must contain only numbers";
-        }
+        if (!values.taxId) errors.taxId = "Tax ID is required";
+        if (!values.governorate) errors.governorate = "Governorate is required";
+        // Industry check moved to step 3 or set a default value
       }
     }
 
@@ -111,11 +112,9 @@ function UserRegister() {
           errors.enrollmentYear = "Entry Year Year Name Is Required";
       } else {
         // Company validation for step 3
-        if (!values.website) errors.website = "Website is Required";
-        if (!values.companyLocation)
-          errors.companyLocation = "Company Location Is Required";
-        if (!values.foundedYear)
-          errors.foundedYear = "Founded Year Is Required";
+        if (!values.industry) errors.industry = "Industry is required";
+        if (!values.city) errors.city = "City is required";
+        if (!values.street) errors.street = "Street is required";
       }
     }
     return errors;
@@ -146,7 +145,7 @@ function UserRegister() {
       } else {
         // Prepare profile data based on user type
         let profileData;
-
+        let response;
         if (isStudent) {
           profileData = {
             fullName: values.fullName,
@@ -156,25 +155,25 @@ function UserRegister() {
             enrollmentYear: parseInt(values.enrollmentYear, 10),
             age: parseInt(values.age, 10),
             gender: values.gender,
-            phoneNumber: values.phoneNumber,
+            phoneNumber: `+2${values.phoneNumber}`,
             bio: values.bio,
             profilePictureUrl: values.profilePictureUrl,
           };
+          // Call student-specific endpoint
+          response = await completeStudentProfile(profileData);
         } else {
           profileData = {
             companyName: values.companyName,
             industry: values.industry,
-            website: values.website,
-            companyLocation: values.companyLocation,
-            foundedYear: parseInt(values.foundedYear, 10),
-            companySize: values.companySize,
-            phoneNumber: values.phoneNumber,
-            bio: values.bio,
-            profilePictureUrl: values.profilePictureUrl,
+            governorate: values.governorate,
+            taxId: values.taxId,
+            city: values.city,
+            street: values.street,
           };
+          // Call company-specific endpoint
+          response = await completeCompanyProfile(profileData);
         }
-
-        const response = await completeProfile(profileData);
+        console.log(profileData);
         if (response) {
           Swal.fire({
             icon: "success",

@@ -7,6 +7,7 @@ import ProfileDetailes from "./pages/StudentProfilePage/ProfileDetailes";
 import RoadMap from "./pages/RoadMap/RoadMap";
 import CompanyProfile from "./pages/CompanyProfile/CompanyProfile";
 import BookMarkPage from "./pages/BookMarkPage/BookMarkPage";
+import RoadMapDetailes from "./pages/RoadMap/RoadMapDetailes";
 
 const HomePage = lazy(() => import("./pages/HomeContainer/HomePage"));
 const UserLoginPage = lazy(() => import("./pages/users/Login/UserLogin"));
@@ -47,11 +48,12 @@ function App() {
             <Route path="forgetPassword" element={<ForgetPassword />} />
             <Route path="reset-password" element={<ResetPassword />} />
           </Route>
-          <Route path="/profile/Me" element={<ProfileDetailes />} />
-          <Route path="/companyProfile" element={<CompanyProfile />} />
+          <Route path="/profile/:studentid" element={<ProfileDetailes />} />
+          <Route path="/company/:companyid" element={<CompanyProfile />} />
           <Route path="/Bookmarks" element={<BookMarkPage />} />
 
           <Route path="/Roadmaps" element={<RoadMap />} />
+          <Route path="/roadmap/:roadmapid" element={<RoadMapDetailes />} />
         </Routes>
       </Suspense>
 

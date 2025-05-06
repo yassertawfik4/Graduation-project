@@ -3,15 +3,19 @@ import studentprofile from "/public/images/dd.jpg";
 import { Link } from "react-router-dom";
 import { FaGithub, FaLinkedin, FaPen } from "react-icons/fa";
 import { IoIosLink } from "react-icons/io";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { MdOutlineCancel } from "react-icons/md";
+import PropTypes from "prop-types";
+import axiosInstance from "../../../Api/axiosInstance";
+import Swal from "sweetalert2";
 
 function StudentProfileHeader({ data }) {
   const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState({
-    name: "Yasser Tawfik",
-    jobTitle: "Front-End Developer",
-    bio: "Driven by a love for problem-solving and a keen eye for detail, I'm a front-end developer seeking an internship to expand my expertise. I'm committed to learning new technologies and contributing to a dynamic team while building impactful user interfaces.",
+    fullName: "",
+    jobTitle: "",
+    bio: "",
   });
 
   const [socialIcons, setSocialIcons] = useState([
@@ -27,6 +31,17 @@ function StudentProfileHeader({ data }) {
       name: "LinkedIn",
     },
   ]);
+
+  // Initialize userData when data prop changes
+  useEffect(() => {
+    if (data && data.basicInfo) {
+      setUserData({
+        fullName: data.basicInfo.fullName || "",
+        jobTitle: data.basicInfo.jobTitle || "",
+        bio: data.basicInfo.bio || "",
+      });
+    }
+  }, [data]);
 
   const [profileImage, setProfileImage] = useState(studentprofile);
   const fileInputRef = useRef(null);
@@ -57,9 +72,58 @@ function StudentProfileHeader({ data }) {
     setSocialIcons([...socialIcons, { ...iconObject, url: "" }]);
   };
 
-  const handleSave = () => {
-    console.log("Saving data:", { userData, socialIcons });
-    setIsEditing(false);
+  const handleSave = async () => {
+    try {
+      setLoading(true);
+
+      // Validate required fields
+      if (!userData.fullName) {
+        Swal.fire({
+          icon: "warning",
+          title: "Required Field Missing",
+          text: "Full name is required",
+          confirmButtonColor: "#3A4C59",
+        });
+        setLoading(false);
+        return;
+      }
+
+      // Prepare profile data to update
+      const profileData = {
+        fullName: userData.fullName,
+        bio: userData.bio,
+        jobTitle: userData.jobTitle,
+      };
+
+      // Send update request to the API
+      await axiosInstance.put("Student/profiles/me", profileData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessUsertoken")}`,
+        },
+      });
+
+      // Show success message
+      Swal.fire({
+        icon: "success",
+        title: "Profile Updated",
+        text: "Your profile has been updated successfully",
+        timer: 2000,
+        timerProgressBar: true,
+        confirmButtonColor: "#3A4C59",
+      });
+
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Update Failed",
+        text: error.response?.data?.message || "Failed to update your profile",
+        confirmButtonColor: "#3A4C59",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleImageChange = (e) => {
@@ -98,7 +162,7 @@ function StudentProfileHeader({ data }) {
                   alt="Profile"
                   className="w-full h-full object-cover"
                 />
-                {/* أيقونة الكاميرا داخل الصورة */}
+                {/* Camera icon inside the image */}
                 <div className="absolute bottom-2 right-2 bg-white p-2 rounded-full shadow-md">
                   <CiCamera size={20} className="text-gray-600" />
                 </div>
@@ -115,13 +179,34 @@ function StudentProfileHeader({ data }) {
                 <button
                   onClick={handleSave}
                   className="flex items-center justify-center gap-2 px-8 py-1 bg-[#3A4C59] border-2 border-[#3A4C59] text-white transition-all duration-300 ease-in-out cursor-pointer font-semibold rounded-md hover:bg-white hover:text-[#3A4C59]"
+                  disabled={loading}
                 >
-                  Update
+                  {loading ? "Updating..." : "Update"}
                 </button>
 
                 <button
-                  onClick={() => setIsEditing(false)}
+                  onClick={() => {
+                    setIsEditing(false);
+                    // Reset to original data
+                    if (data && data.basicInfo) {
+                      setUserData({
+                        fullName: data.basicInfo.fullName || "",
+                        jobTitle: data.basicInfo.jobTitle || "",
+                        bio: data.basicInfo.bio || "",
+                      });
+                    }
+
+                    Swal.fire({
+                      icon: "info",
+                      title: "Cancelled",
+                      text: "No changes have been saved.",
+                      timer: 1500,
+                      timerProgressBar: true,
+                      confirmButtonColor: "#3A4C59",
+                    });
+                  }}
                   className="flex items-center justify-center gap-2 px-8 py-1 border border-[#C51800] rounded-md  text-[#C51800] font-semibold cursor-pointer"
+                  disabled={loading}
                 >
                   Cancel
                 </button>
@@ -133,25 +218,26 @@ function StudentProfileHeader({ data }) {
                 <div className="space-y-2">
                   <div>
                     <label className="block text-[17px] text-gray-600 font-bold mb-3">
-                      User Name
+                      Full Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
-                      name="name"
-                      value={userData.name}
+                      name="fullName"
+                      value={userData.fullName}
                       onChange={handleOnChange}
                       className="text-[#3A4C59] font-bold border outline-none border-[#C9C9C9] px-2 py-2 rounded-sm w-full"
+                      required
                     />
                   </div>
                   <div>
                     <label className="block text-[17px] text-gray-600 font-bold my-3">
-                      Jopt Title
+                      Job Title
                     </label>
                     <input
                       name="jobTitle"
                       value={userData.jobTitle}
                       onChange={handleOnChange}
-                      placeholder="Write something about you"
+                      placeholder="Write your job title"
                       className="text-[#3A4C59] font-bold border outline-none border-[#C9C9C9] px-2 py-1 rounded-md w-full"
                     />
                   </div>
@@ -209,7 +295,7 @@ function StudentProfileHeader({ data }) {
           </div>
         ) : (
           <div className="flex items-center justify-between">
-            {/* الصورة */}
+            {/* Image */}
             <div
               className="w-[160px] h-[160px] relative bottom-10 rounded-full border-4 border-white shadow-lg overflow-hidden flex-shrink-0 cursor-pointer"
               onClick={handleImageClick}
@@ -219,7 +305,7 @@ function StudentProfileHeader({ data }) {
                 alt="Profile"
                 className="w-full h-full object-cover"
               />
-              {/* أيقونة الكاميرا داخل الصورة */}
+              {/* Camera icon inside the image */}
               <div className="absolute bottom-4 right-4 bg-white p-2 rounded-full shadow-md">
                 <CiCamera size={20} className="text-gray-600" />
               </div>
@@ -235,10 +321,10 @@ function StudentProfileHeader({ data }) {
             <div className="flex flex-grow justify-between  ml-6">
               <div className="flex flex-col gap-2 flex-grow mt-2">
                 <h2 className="text-3xl font-bold font-[roboto]">
-                  {data.fullName}
+                  {data?.basicInfo?.fullName || userData.fullName}
                 </h2>
                 <p className="text-[#3A4C59] font-bold max-w-[650px] break-words">
-                  {userData.jobTitle}
+                  {data?.basicInfo?.jobTitle || userData.jobTitle}
                 </p>
                 <div className="flex gap-3 mt-2 text-gray-600">
                   {socialIcons.map((social, index) => (
@@ -274,7 +360,7 @@ function StudentProfileHeader({ data }) {
                 About
               </label>
               <textarea
-                name="jobTitle"
+                name="bio"
                 value={userData.bio}
                 onChange={handleOnChange}
                 placeholder="Write something about you"
@@ -287,7 +373,7 @@ function StudentProfileHeader({ data }) {
                 About
               </h2>
               <p className="text-[#3A4C59] font-medium text-sm leading-6 pb-3">
-                {data.bio}
+                {data?.basicInfo?.bio || userData.bio || "No bio provided yet."}
               </p>
             </div>
           )}
@@ -295,9 +381,10 @@ function StudentProfileHeader({ data }) {
             <div className="flex justify-end my-3">
               <button
                 onClick={handleSave}
-                className="bg-[#3A4C59] text-white py-3 px-6 rounded-lg cursor-pointer font-[roboto] "
+                className="bg-[#3A4C59] text-white py-3 px-6 rounded-lg cursor-pointer font-[roboto]"
+                disabled={loading}
               >
-                save
+                {loading ? "Saving..." : "Save"}
               </button>
             </div>
           )}
@@ -306,5 +393,15 @@ function StudentProfileHeader({ data }) {
     </div>
   );
 }
+
+StudentProfileHeader.propTypes = {
+  data: PropTypes.shape({
+    basicInfo: PropTypes.shape({
+      fullName: PropTypes.string,
+      jobTitle: PropTypes.string,
+      bio: PropTypes.string,
+    }),
+  }),
+};
 
 export default StudentProfileHeader;
