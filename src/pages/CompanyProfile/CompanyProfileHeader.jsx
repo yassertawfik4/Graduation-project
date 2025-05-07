@@ -1,10 +1,8 @@
 import { CiCamera } from "react-icons/ci";
 import companyLogo from "/public/images/profileImage.png";
-import { Link } from "react-router-dom";
 import { FaGithub, FaLinkedin, FaPen } from "react-icons/fa";
 import { IoIosLink } from "react-icons/io";
 import { useState, useRef, useEffect } from "react";
-import { MdOutlineCancel } from "react-icons/md";
 import PropTypes from "prop-types";
 import axiosInstance from "../../Api/axiosInstance";
 
@@ -12,33 +10,41 @@ function CompanyProfileHeader({ company, handleGetCompany }) {
   const [isEditing, setIsEditing] = useState(false);
 
   const [about, setAbout] = useState({
-    about: "",
-    mission: "",
-    vision: "",
+    companyName: "",
+    description: "",
+    industry: "",
+    size: "",
+    websiteUrl: "",
   });
-  const [socialIcons, setSocialIcons] = useState([
-    {
-      icon: <FaGithub size={28} />,
-      url: "https://github.com/framertech",
-      name: "GitHub",
-    },
-    {
-      icon: <IoIosLink size={28} />,
-      url: "https://framer.com",
-      name: "Website",
-    },
-    {
-      icon: <FaLinkedin size={28} />,
-      url: "https://linkedin.com/company/framer",
-      name: "LinkedIn",
-    },
-  ]);
-
+  // const [socialIcons, setSocialIcons] = useState([
+  //   {
+  //     icon: <FaGithub size={28} />,
+  //     url: "https://github.com/framertech",
+  //     name: "GitHub",
+  //   },
+  //   {
+  //     icon: <IoIosLink size={28} />,
+  //     url: "https://framer.com",
+  //     name: "Website",
+  //   },
+  //   {
+  //     icon: <FaLinkedin size={28} />,
+  //     url: "https://linkedin.com/company/framer",
+  //     name: "LinkedIn",
+  //   },
+  // ]);
   const handleAddabout = async () => {
+    const data = {
+      name: about.companyName,
+      description: about.description,
+      industry: about.industry,
+      companySize: about.size,
+      websiteUrl: about.websiteUrl,
+    };
     try {
       const response = await axiosInstance.patch(
-        `Company/profiles/about`,
-        about,
+        `Company/profiles/me/basic`,
+        data,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessUsertoken")}`,
@@ -46,7 +52,6 @@ function CompanyProfileHeader({ company, handleGetCompany }) {
         }
       );
       console.log(response);
-
       handleGetCompany();
     } catch (error) {
       console.log(error);
@@ -54,7 +59,7 @@ function CompanyProfileHeader({ company, handleGetCompany }) {
   };
   const handelGetAbout = async () => {
     try {
-      const response = await axiosInstance.get(`Company/profiles/about`, {
+      const response = await axiosInstance.get(`Company/profiles/basic`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessUsertoken")}`,
         },
@@ -68,34 +73,16 @@ function CompanyProfileHeader({ company, handleGetCompany }) {
   const [profileImage, setProfileImage] = useState(companyLogo);
   const fileInputRef = useRef(null);
 
-  const availableIcons = [
-    { icon: <FaGithub size={23} />, name: "GitHub" },
-    { icon: <IoIosLink size={23} />, name: "Website" },
-    { icon: <FaLinkedin size={23} />, name: "LinkedIn" },
-  ];
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
     setAbout({ ...about, [name]: value });
   };
 
-  const handleIconUrlChange = (index, newUrl) => {
-    const updatedIcons = [...socialIcons];
-    updatedIcons[index].url = newUrl;
-    setSocialIcons(updatedIcons);
-  };
-
-  const handleRemoveIcon = (index) => {
-    const updatedIcons = socialIcons.filter((_, i) => i !== index);
-    setSocialIcons(updatedIcons);
-  };
-
-  const handleAddIcon = (iconObject) => {
-    setSocialIcons([...socialIcons, { ...iconObject, url: "" }]);
-  };
+ 
 
   const handleSave = () => {
-    console.log("Saving company data:", { about, socialIcons });
+    console.log("Saving company data:", { about });
     setIsEditing(false);
     handleAddabout();
   };
@@ -176,9 +163,10 @@ function CompanyProfileHeader({ company, handleGetCompany }) {
                     </label>
                     <input
                       type="text"
-                      name="name"
-                      value={about.name}
+                      name="companyName"
+                      value={about.companyName}
                       onChange={handleOnChange}
+                      placeholder="Your company's name"
                       className="text-[#3A4C59] font-bold border outline-none border-[#C9C9C9] px-2 py-2 rounded-sm w-full"
                     />
                   </div>
@@ -194,53 +182,29 @@ function CompanyProfileHeader({ company, handleGetCompany }) {
                       className="text-[#3A4C59] font-bold border outline-none border-[#C9C9C9] px-2 py-1 rounded-md w-full"
                     />
                   </div>
-                </div>
-              </div>
-
-              <div className="px-4">
-                <h3 className="font-bold text-gray-700 mb-2">Social Media</h3>
-                <div className="space-y-2">
-                  {socialIcons.map((social, index) => (
-                    <div key={index} className="flex items-center gap-2 my-3">
-                      <span className="text-gray-600">{social.icon}</span>
-                      <input
-                        type="text"
-                        value={social.url}
-                        onChange={(e) =>
-                          handleIconUrlChange(index, e.target.value)
-                        }
-                        placeholder={`Enter ${social.name} URL`}
-                        className="border border-gray-300 px-2 py-3 rounded text-sm w-full"
-                      />
-                      <button
-                        onClick={() => handleRemoveIcon(index)}
-                        className="text-black p-1 cursor-pointer bg-[#F1F2F4] px-3 py-3 shadow-sm my-2"
-                        title="Remove"
-                      >
-                        <MdOutlineCancel size={22} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="pl-4">
-                <h3 className="font-bold text-gray-700 mb-2">
-                  Add Social Media
-                </h3>
-                <div className="mt-2">
-                  <p className="text-sm text-gray-600 mb-1">Add new icon:</p>
-                  <div className="flex gap-2 mb-6">
-                    {availableIcons.map((iconOption, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => handleAddIcon(iconOption)}
-                        className="p-2 border cursor-pointer border-gray-300 rounded-md hover:bg-gray-100"
-                        title={`Add ${iconOption.name}`}
-                      >
-                        {iconOption.icon}
-                      </button>
-                    ))}
+                  <div>
+                    <label className="block text-[17px] text-gray-600 font-bold my-3">
+                      companySize
+                    </label>
+                    <input
+                      name="size"
+                      value={about.size}
+                      onChange={handleOnChange}
+                      placeholder="Your company's companySize"
+                      className="text-[#3A4C59] font-bold border outline-none border-[#C9C9C9] px-2 py-1 rounded-md w-full"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[17px] text-gray-600 font-bold my-3">
+                      websiteUrl
+                    </label>
+                    <input
+                      name="websiteUrl"
+                      value={about.websiteUrl}
+                      onChange={handleOnChange}
+                      placeholder="Your company's websiteUrl"
+                      className="text-[#3A4C59] font-bold border outline-none border-[#C9C9C9] px-2 py-1 rounded-md w-full"
+                    />
                   </div>
                 </div>
               </div>
@@ -277,19 +241,6 @@ function CompanyProfileHeader({ company, handleGetCompany }) {
                 <p className="text-[#3A4C59] font-bold max-w-[650px] break-words">
                   {company?.basicInfo?.industry || "Industry Type"}
                 </p>
-                <div className="flex gap-3 mt-2 text-gray-600">
-                  {socialIcons.map((social, index) => (
-                    <Link
-                      key={index}
-                      to={social.url}
-                      target="_blank"
-                      title={social.name}
-                      className="cursor-pointer"
-                    >
-                      {social.icon}
-                    </Link>
-                  ))}
-                </div>
               </div>
 
               <div className="flex-shrink-0 mt-3">
@@ -311,73 +262,19 @@ function CompanyProfileHeader({ company, handleGetCompany }) {
                 Company Description
               </label>
               <textarea
-                name="about"
-                value={about.about}
+                name="description"
+                value={about.description}
                 onChange={handleOnChange}
                 placeholder="Write about your company"
-                className="text-[#3A4C59] font-medium text-[16px] leading-7 border h-40 outline-none border-[#C9C9C9] px-2 py-1 rounded-md w-full"
-              />
-              <label className="block text-[22px] text-[#000000] font-bold my-3">
-                Company mission
-              </label>
-              <textarea
-                name="mission"
-                value={about.mission}
-                onChange={handleOnChange}
-                placeholder="Write about your company mission"
-                className="text-[#3A4C59] font-medium text-[16px] leading-7 border h-20 outline-none border-[#C9C9C9] px-2 py-1 rounded-md w-full"
-              />
-              <label className="block text-[22px] text-[#000000] font-bold my-3">
-                Company vision
-              </label>
-              <textarea
-                name="vision"
-                value={about.vision}
-                onChange={handleOnChange}
-                placeholder="Write about your company vision"
                 className="text-[#3A4C59] font-medium text-[16px] leading-7 border h-20 outline-none border-[#C9C9C9] px-2 py-1 rounded-md w-full"
               />
             </div>
           ) : (
             <div className="rounded-xl w-full px-2 py-1 ">
               <h2 className="block text-[22px] font-[roboto] text-[#000000] font-bold my-3">
-                About
+                Description
               </h2>
-              {company?.about === "" ? (
-                <button
-                  onClick={() => setIsEditing(true)}
-                  className="text-[#3A4C59] border-2 border-[#C9C9C9] rounded-md px-3 py-2 font-medium text-sm cursor-pointer"
-                >
-                  Add About
-                </button>
-              ) : (
-                <div className="">
-                  <p className="text-[#3A4C59] font-medium text-sm leading-6 pb-3">
-                    {company?.about?.about}
-                  </p>
-
-                  {company?.about?.mission !== "" && (
-                    <div>
-                      <h2 className="block text-[18px] font-[roboto] text-[#000000] font-bold my-3">
-                        mission
-                      </h2>
-                      <p className="text-[#3A4C59] font-medium text-sm leading-6 pb-3">
-                        {company?.about?.mission}
-                      </p>
-                    </div>
-                  )}
-                  {company?.about?.vision !== "" && (
-                    <div>
-                      <h2 className="block text-[18px] font-[roboto] text-[#000000] font-bold my-3">
-                        vision
-                      </h2>
-                      <p className="text-[#3A4C59] font-medium text-sm leading-6 pb-3">
-                        {company?.about?.vision}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              )}
+              {company?.basicInfo?.description}
             </div>
           )}
           {isEditing && (

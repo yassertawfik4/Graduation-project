@@ -8,6 +8,7 @@ import RoadMap from "./pages/RoadMap/RoadMap";
 import CompanyProfile from "./pages/CompanyProfile/CompanyProfile";
 import BookMarkPage from "./pages/BookMarkPage/BookMarkPage";
 import RoadMapDetailes from "./pages/RoadMap/RoadMapDetailes";
+import InternDetails from "./pages/HomeContainer/InternDetails";
 
 const HomePage = lazy(() => import("./pages/HomeContainer/HomePage"));
 const UserLoginPage = lazy(() => import("./pages/users/Login/UserLogin"));
@@ -49,6 +50,7 @@ function App() {
             <Route path="reset-password" element={<ResetPassword />} />
           </Route>
           <Route path="/profile/:studentid" element={<ProfileDetailes />} />
+          <Route path="/detailes/:id" element={<InternDetails />} />
           <Route path="/company/:companyid" element={<CompanyProfile />} />
           <Route path="/Bookmarks" element={<BookMarkPage />} />
 

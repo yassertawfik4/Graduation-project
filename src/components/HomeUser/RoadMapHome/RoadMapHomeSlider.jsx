@@ -5,7 +5,7 @@ import "swiper/css/navigation";
 import { FaArrowRight } from "react-icons/fa";
 import { RoadMapHomeCard } from "./RoadMapHomeCard";
 
-function RoadMapHomeSlider() {
+function RoadMapHomeSlider({ recommendedInternship }) {
   return (
     <div className="my-16">
       <div className="container mx-auto">
@@ -76,18 +76,11 @@ function RoadMapHomeSlider() {
               },
             }}
           >
-            <SwiperSlide>
-              <RoadMapHomeCard />
-            </SwiperSlide>
-            <SwiperSlide>
-              <RoadMapHomeCard />
-            </SwiperSlide>
-            <SwiperSlide>
-              <RoadMapHomeCard />
-            </SwiperSlide>
-            <SwiperSlide>
-              <RoadMapHomeCard />
-            </SwiperSlide>
+            {recommendedInternship?.roadmaps?.map((item) => (
+              <SwiperSlide key={item.id}>
+                <RoadMapHomeCard item={item} />
+              </SwiperSlide>
+            ))}
           </Swiper>
         </div>
       </div>

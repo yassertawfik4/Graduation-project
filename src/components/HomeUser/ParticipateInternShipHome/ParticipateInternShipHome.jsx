@@ -1,18 +1,16 @@
-import { Navigation, Pagination } from "swiper/modules";
+import RecommendedInternshipcard from "../RecommendedInternshipSlider/RecommendedInternshipcard";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+import { FaArrowRight } from "react-icons/fa6";
 import "swiper/css";
 import "swiper/css/navigation";
-
-import RecommendedInternshipcard from "./RecommendedInternshipcard";
-import { FaArrowRight } from "react-icons/fa";
-
-function RecommendedInternshipSlider({ recommendedInternship }) {
+function ParticipateInternShipHome({ recommendedInternship }) {
   return (
     <div className="my-16">
       <div className="container mx-auto">
         <div className="flex justify-between items-center">
           <h2 className="text-[#000000] font-bold font-[rubik] text-[38px] my-4">
-            Recommended for you
+            Participate in real world project
           </h2>
           <p className="text-[#000000] flex items-center gap-2 font-[rubik] font-medium text-[17px]">
             view all{" "}
@@ -77,7 +75,7 @@ function RecommendedInternshipSlider({ recommendedInternship }) {
               },
             }}
           >
-            {recommendedInternship?.recommendedInternships?.map((item) => (
+            {recommendedInternship?.realWorldProjects?.map((item) => (
               <SwiperSlide key={item.id}>
                 <RecommendedInternshipcard item={item} />
               </SwiperSlide>
@@ -89,4 +87,4 @@ function RecommendedInternshipSlider({ recommendedInternship }) {
   );
 }
 
-export default RecommendedInternshipSlider;
+export default ParticipateInternShipHome;

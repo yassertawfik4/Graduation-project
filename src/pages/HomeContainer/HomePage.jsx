@@ -7,12 +7,33 @@ import { useEffect, useState } from "react";
 import HeroSectionUser from "../../components/HomeUser/HeroSection/HeroSectionUser";
 import RecommendedInternshipSlider from "../../components/HomeUser/RecommendedInternshipSlider/RecommendedInternshipSlider";
 import RoadMapHomeSlider from "../../components/HomeUser/RoadMapHome/RoadMapHomeSlider";
+import axiosInstance from "../../Api/axiosInstance";
+import RecentInernShip from "../../components/HomeUser/RecentInernShip/RecentInernShip";
+import IntetnshipHome from "../../components/HomeUser/IntetnshipHome/IntetnshipHome";
+import ParticipateInternShipHome from "../../components/HomeUser/ParticipateInternShipHome/ParticipateInternShipHome";
 
 function HomePage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     const token = localStorage.getItem("accessUsertoken");
     setIsLoggedIn(token);
+  }, []);
+  const [recommendedInternship, setRecommendedInternships] = useState({});
+  const handelGetHomeData = async () => {
+    try {
+      const response = await axiosInstance.get(`Home/GetHomePageData`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessUsertoken")}`,
+        },
+      });
+      console.log(response.data);
+      setRecommendedInternships(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    handelGetHomeData();
   }, []);
   return (
     <div className="">
@@ -26,8 +47,15 @@ function HomePage() {
         {isLoggedIn ? (
           <>
             <HeroSectionUser />
-            <RecommendedInternshipSlider />
-            <RoadMapHomeSlider />
+            <RecommendedInternshipSlider
+              recommendedInternship={recommendedInternship}
+            />
+            <RecentInernShip recommendedInternship={recommendedInternship} />
+            <IntetnshipHome recommendedInternship={recommendedInternship} />
+            <ParticipateInternShipHome
+              recommendedInternship={recommendedInternship}
+            />
+            <RoadMapHomeSlider recommendedInternship={recommendedInternship} />
           </>
         ) : (
           <>

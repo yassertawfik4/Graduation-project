@@ -108,10 +108,14 @@ function CompanyFounding({ company }) {
           {/* العمود الثاني */}
           <div>
             <p className="text-[#8D9499] font-semibold">Size</p>
-            <p className="text-[#3A4C59] font-semibold">Enterprise</p>
+            <p className="text-[#3A4C59] font-semibold">
+              {company?.basicInfo?.size}
+            </p>
 
             <p className="text-[#8D9499] font-semibold mt-4">Company Website</p>
-            <p className="text-[#3A4C59] font-semibold">website</p>
+            <p className="text-[#3A4C59] font-semibold">
+              {company?.basicInfo?.websiteUrl}
+            </p>
           </div>
         </div>
       )}

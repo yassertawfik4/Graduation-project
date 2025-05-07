@@ -2,7 +2,8 @@ import { CiBookmark, CiClock2 } from "react-icons/ci";
 import tailLogo from "/public/images/tailwind.png";
 import applicationUser from "/public/images/applicationUser.png";
 import { FaLocationDot } from "react-icons/fa6";
-function RecommendedInternshipcard() {
+import { Link } from "react-router-dom";
+function RecommendedInternshipcard({ item }) {
   return (
     <div className="my-4">
       <div className="bg-white rounded-lg p-4 shadow-lg ">
@@ -18,11 +19,14 @@ function RecommendedInternshipcard() {
               />
             </div>
             <div>
-              <h2 className="text-[#010318] font-bold font-[roboto] text-[24px]">
-                UI/UX designer
-              </h2>
+              <Link
+                to={`/detailes/${item.id}`}
+                className="text-[#010318] font-bold font-[roboto] text-[24px]"
+              >
+                {item.title}
+              </Link>
               <p className="text-[#3A4C59] font-[roboto] text-[16px] font-bold">
-                Tailwind
+                {item.companyName}
               </p>
             </div>
           </div>
@@ -41,10 +45,10 @@ function RecommendedInternshipcard() {
             <span>
               <FaLocationDot size={20} />
             </span>
-            Remote
+            {item.workingModel || item.projectType}
           </button>
           <button className="bg-[#3A4C59] flex items-center font-semibold rounded-lg gap-2 opacity-85 text-white px-3 py-2">
-            internship
+            {item.type || item.technologies}
           </button>
         </div>
         <div className="flex justify-between items-center">
@@ -55,12 +59,13 @@ function RecommendedInternshipcard() {
               alt="applicationUser"
             />
             <p className="text-[#3A4C59] font-[roboto] text-[13px] font-medium my-2">
-              20 Application
+              {item.applicationCount} Application
             </p>
           </div>
           <div>
             <p className="text-[#010318] font-medium font-[roboto] text-[16px]">
-              00$-00$ <span className="text-[#B8B8B8]">/month</span>
+              {item.salary} {item.currency}{" "}
+              <span className="text-[#B8B8B8]">/month</span>
             </p>
           </div>
         </div>

@@ -75,7 +75,7 @@ export const completeStudentProfile = async (profileData) => {
       },
     });
     localStorage.setItem("studentId", response.data);
-
+    localStorage.setItem("isStudent", "Student");
     console.log("studentId", response.data);
     return response.data;
   } catch (error) {
@@ -109,13 +109,10 @@ export const fetchStudentProfile = async () => {
       },
     });
 
-    const { studentId } = response.data;
+    localStorage.setItem("isStudent", "Student");
+    localStorage.setItem("studentId", response.data); // نخزن ال StudentID
 
-    if (studentId) {
-      localStorage.setItem("studentId", studentId); // نخزن ال StudentID
-    }
-
-    return studentId;
+    return response.data;
   } catch (error) {
     console.error("Error fetching student profile:", error);
     return null;

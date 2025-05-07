@@ -2,7 +2,7 @@ import { CiBookmark } from "react-icons/ci";
 import MapLogo from "/public/images/Mapbox.png";
 import applicationUser from "/public/images/applicationUser.png";
 
-export const RoadMapHomeCard = () => {
+export const RoadMapHomeCard = ({ item }) => {
   return (
     <div className="bg-white rounded-lg p-4 shadow-lg ">
       <div className="flex justify-between items-center">
@@ -18,10 +18,10 @@ export const RoadMapHomeCard = () => {
           </div>
           <div>
             <h2 className="text-[#010318] font-bold font-[roboto] text-[24px]">
-              Back End roadmap
+              {item.title}
             </h2>
             <p className="text-[#3A4C59] font-[roboto] text-[16px] font-bold">
-              Mapbox
+              {item.companyName}
             </p>
           </div>
         </div>
