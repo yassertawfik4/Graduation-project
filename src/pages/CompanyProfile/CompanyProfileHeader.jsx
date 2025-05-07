@@ -3,19 +3,19 @@ import companyLogo from "/public/images/profileImage.png";
 import { Link } from "react-router-dom";
 import { FaGithub, FaLinkedin, FaPen } from "react-icons/fa";
 import { IoIosLink } from "react-icons/io";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { MdOutlineCancel } from "react-icons/md";
 import PropTypes from "prop-types";
+import axiosInstance from "../../Api/axiosInstance";
 
-function CompanyProfileHeader({ company }) {
+function CompanyProfileHeader({ company, handleGetCompany }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [companyData, setCompanyData] = useState({
-    name: "Framer Technologies",
-    industry: "Design & Technology",
-    tagline:
-      "We believe in the power of design to transform ideas into impactful digital experiences. As a leading innovator in the tech industry, we specialize in creating intuitive and visually stunning tools that empower designers and developers.",
-  });
 
+  const [about, setAbout] = useState({
+    about: "",
+    mission: "",
+    vision: "",
+  });
   const [socialIcons, setSocialIcons] = useState([
     {
       icon: <FaGithub size={28} />,
@@ -34,6 +34,37 @@ function CompanyProfileHeader({ company }) {
     },
   ]);
 
+  const handleAddabout = async () => {
+    try {
+      const response = await axiosInstance.patch(
+        `Company/profiles/about`,
+        about,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessUsertoken")}`,
+          },
+        }
+      );
+      console.log(response);
+
+      handleGetCompany();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handelGetAbout = async () => {
+    try {
+      const response = await axiosInstance.get(`Company/profiles/about`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessUsertoken")}`,
+        },
+      });
+      console.log(response);
+      setAbout(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const [profileImage, setProfileImage] = useState(companyLogo);
   const fileInputRef = useRef(null);
 
@@ -45,7 +76,7 @@ function CompanyProfileHeader({ company }) {
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
-    setCompanyData({ ...companyData, [name]: value });
+    setAbout({ ...about, [name]: value });
   };
 
   const handleIconUrlChange = (index, newUrl) => {
@@ -64,8 +95,9 @@ function CompanyProfileHeader({ company }) {
   };
 
   const handleSave = () => {
-    console.log("Saving company data:", { companyData, socialIcons });
+    console.log("Saving company data:", { about, socialIcons });
     setIsEditing(false);
+    handleAddabout();
   };
 
   const handleImageChange = (e) => {
@@ -82,7 +114,9 @@ function CompanyProfileHeader({ company }) {
   const handleImageClick = () => {
     fileInputRef.current.click();
   };
-
+  useEffect(() => {
+    handelGetAbout();
+  }, []);
   return (
     <div className="bg-white shadow rounded-lg p-6">
       <div className="relative">
@@ -143,7 +177,7 @@ function CompanyProfileHeader({ company }) {
                     <input
                       type="text"
                       name="name"
-                      value={companyData.name}
+                      value={about.name}
                       onChange={handleOnChange}
                       className="text-[#3A4C59] font-bold border outline-none border-[#C9C9C9] px-2 py-2 rounded-sm w-full"
                     />
@@ -154,7 +188,7 @@ function CompanyProfileHeader({ company }) {
                     </label>
                     <input
                       name="industry"
-                      value={companyData.industry}
+                      value={about.industry}
                       onChange={handleOnChange}
                       placeholder="Your company's industry"
                       className="text-[#3A4C59] font-bold border outline-none border-[#C9C9C9] px-2 py-1 rounded-md w-full"
@@ -277,21 +311,73 @@ function CompanyProfileHeader({ company }) {
                 Company Description
               </label>
               <textarea
-                name="tagline"
-                value={companyData.tagline}
+                name="about"
+                value={about.about}
                 onChange={handleOnChange}
                 placeholder="Write about your company"
                 className="text-[#3A4C59] font-medium text-[16px] leading-7 border h-40 outline-none border-[#C9C9C9] px-2 py-1 rounded-md w-full"
               />
+              <label className="block text-[22px] text-[#000000] font-bold my-3">
+                Company mission
+              </label>
+              <textarea
+                name="mission"
+                value={about.mission}
+                onChange={handleOnChange}
+                placeholder="Write about your company mission"
+                className="text-[#3A4C59] font-medium text-[16px] leading-7 border h-20 outline-none border-[#C9C9C9] px-2 py-1 rounded-md w-full"
+              />
+              <label className="block text-[22px] text-[#000000] font-bold my-3">
+                Company vision
+              </label>
+              <textarea
+                name="vision"
+                value={about.vision}
+                onChange={handleOnChange}
+                placeholder="Write about your company vision"
+                className="text-[#3A4C59] font-medium text-[16px] leading-7 border h-20 outline-none border-[#C9C9C9] px-2 py-1 rounded-md w-full"
+              />
             </div>
           ) : (
-            <div className="rounded-xl w-full px-2 py-1">
+            <div className="rounded-xl w-full px-2 py-1 ">
               <h2 className="block text-[22px] font-[roboto] text-[#000000] font-bold my-3">
                 About
               </h2>
-              <p className="text-[#3A4C59] font-medium text-sm leading-6 pb-3">
-                {company?.tagline || companyData.tagline}
-              </p>
+              {company?.about === "" ? (
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="text-[#3A4C59] border-2 border-[#C9C9C9] rounded-md px-3 py-2 font-medium text-sm cursor-pointer"
+                >
+                  Add About
+                </button>
+              ) : (
+                <div className="">
+                  <p className="text-[#3A4C59] font-medium text-sm leading-6 pb-3">
+                    {company?.about?.about}
+                  </p>
+
+                  {company?.about?.mission !== "" && (
+                    <div>
+                      <h2 className="block text-[18px] font-[roboto] text-[#000000] font-bold my-3">
+                        mission
+                      </h2>
+                      <p className="text-[#3A4C59] font-medium text-sm leading-6 pb-3">
+                        {company?.about?.mission}
+                      </p>
+                    </div>
+                  )}
+                  {company?.about?.vision !== "" && (
+                    <div>
+                      <h2 className="block text-[18px] font-[roboto] text-[#000000] font-bold my-3">
+                        vision
+                      </h2>
+                      <p className="text-[#3A4C59] font-medium text-sm leading-6 pb-3">
+                        {company?.about?.vision}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
           {isEditing && (

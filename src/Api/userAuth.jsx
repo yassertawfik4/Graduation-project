@@ -92,9 +92,8 @@ export const completeCompanyProfile = async (profiledata) => {
       },
     });
 
-    localStorage.setItem("accessUsertoken", response.data.token);
-    localStorage.setItem("isCompany", response.data.userType);
-    localStorage.setItem("companyId", response.data.profileId);
+    localStorage.setItem("isCompany", "Company");
+    localStorage.setItem("companyId", response.data);
 
     console.log(response);
     return response.data;
