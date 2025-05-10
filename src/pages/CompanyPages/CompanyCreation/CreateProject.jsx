@@ -184,7 +184,7 @@ function CreateProject() {
                   <option value="" disabled>
                     Select Type
                   </option>
-                  <option value="ProjectBased">Project Based</option>
+                  <option value="Traditional">InternShip</option>
                 </select>
                 {errors.type && <p style={errorStyle}>{errors.type}</p>}
               </div>
