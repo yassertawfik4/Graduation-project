@@ -12,6 +12,7 @@ function StudentSkills({ data }) {
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [availableSkills, setAvailableSkills] = useState([]);
+  const isCompany = localStorage.getItem("isCompany");
 
   // Initialize skills from props data
   useEffect(() => {
@@ -196,7 +197,7 @@ function StudentSkills({ data }) {
     <div className="mt-6 bg-white border border-[#C9C9C9] rounded-lg p-6">
       <div className="flex justify-between items-center mb-4 pb-5">
         <h3 className="text-xl font-bold text-[#3A4C59]">Skills</h3>
-        {!isEditing ? (
+        {!isEditing && isCompany !== "Company" ? (
           <button
             onClick={() => {
               if (skills.length > 0) {
@@ -221,14 +222,16 @@ function StudentSkills({ data }) {
             )}
           </button>
         ) : (
-          <button
-            onClick={() => setShowModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-transparent cursor-pointer font-bold text-[#8D9499] border border-[#C9C9C9] rounded-md hover:bg-gray-100"
-            disabled={loading}
-          >
-            <FaPlus size={15} />
-            Add Skill
-          </button>
+          isCompany !== "Company" && (
+            <button
+              onClick={() => setShowModal(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-transparent cursor-pointer font-bold text-[#8D9499] border border-[#C9C9C9] rounded-md hover:bg-gray-100"
+              disabled={loading}
+            >
+              <FaPlus size={15} />
+              Add Skill
+            </button>
+          )
         )}
       </div>
 
@@ -254,14 +257,16 @@ function StudentSkills({ data }) {
         ) : (
           <div className="text-center py-8 w-full">
             <p className="text-[#8D9499] mb-4">No skills added yet.</p>
-            <button
-              onClick={() => setShowModal(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[#3A4C59] text-white rounded-md hover:bg-opacity-90"
-              disabled={loading}
-            >
-              <FaPlus size={14} />
-              Add Your First Skill
-            </button>
+            {isCompany !== "Company" && (
+              <button
+                onClick={() => setShowModal(true)}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-[#3A4C59] text-white rounded-md hover:bg-opacity-90"
+                disabled={loading}
+              >
+                <FaPlus size={14} />
+                Add Your First Skill
+              </button>
+            )}
           </div>
         )}
       </div>

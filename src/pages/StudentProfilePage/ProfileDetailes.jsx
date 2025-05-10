@@ -9,14 +9,15 @@ import StudentExperiences from "./studentPrfileComponents/StudentExperiences";
 import StudentProjects from "./studentPrfileComponents/StudentProjects";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../Api/axiosInstance";
+import { useParams } from "react-router-dom";
 function ProfileDetailes() {
   const [myProfile, setMyProfile] = useState({});
-  const studentid = localStorage.getItem("studentId");
-
+  const studentids = localStorage.getItem("studentId");
+  const { studentid } = useParams();
   const handleGetProfile = async () => {
     try {
       const response = await axiosInstance.get(
-        `Student/profiles/${studentid}`,
+        `Student/profiles/${studentids || studentid}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessUsertoken")}`,
@@ -42,19 +43,19 @@ function ProfileDetailes() {
           </h2>
 
           {/* Profile Header */}
-          <StudentProfileHeader data={myProfile} />
+          <StudentProfileHeader data={myProfile} handleGetProfile={handleGetProfile} />
 
           {/* Personal Information */}
-          <StudentPersonalInformation data={myProfile} />
+          <StudentPersonalInformation data={myProfile} handleGetProfile={handleGetProfile} />
 
           {/* Education */}
-          <StudentEducation data={myProfile} />
+          <StudentEducation data={myProfile} handleGetProfile={handleGetProfile} />
 
           {/* Skills */}
           <StudentSkills data={myProfile} />
 
           {/* CV/Resume Section */}
-          <StudentResume />
+          <StudentResume data={myProfile} />
 
           {/* Experiences Section */}
           <StudentExperiences data={myProfile} />

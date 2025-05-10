@@ -8,6 +8,7 @@ function StudentProjects({ data }) {
   const [isEditing, setIsEditing] = useState(false);
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(false);
+  const isCompany = localStorage.getItem("isCompany");
   const [currentProject, setCurrentProject] = useState({
     projectName: "",
     projectUrl: "",
@@ -243,7 +244,7 @@ function StudentProjects({ data }) {
     <div className="mt-6 mb-6 bg-white border border-[#C9C9C9] rounded-lg p-6">
       <div className="flex justify-between items-center mb-4 pb-5">
         <h2 className="text-xl font-bold text-[#3A4C59]">Projects</h2>
-        {!isEditing && (
+        {!isEditing && isCompany !== "Company" && (
           <button
             onClick={handleAddNewProject}
             className="flex items-center gap-2 px-4 py-2 bg-transparent cursor-pointer font-bold text-[#8D9499] border border-[#C9C9C9] rounded-md hover:bg-gray-100"
@@ -397,13 +398,15 @@ function StudentProjects({ data }) {
           ) : (
             <div className="text-center py-8">
               <p className="text-[#3A4C59] mb-4">No projects added yet.</p>
-              <button
-                onClick={handleAddNewProject}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-[#3A4C59] text-white rounded-md hover:bg-opacity-90"
-              >
-                <FaPlus size={14} />
-                Add Your First Project
-              </button>
+              {isCompany !== "Company" && (
+                <button
+                  onClick={handleAddNewProject}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#3A4C59] text-white rounded-md hover:bg-opacity-90"
+                >
+                  <FaPlus size={14} />
+                  Add Your First Project
+                </button>
+              )}
             </div>
           )}
         </div>

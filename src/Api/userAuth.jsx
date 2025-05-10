@@ -69,23 +69,41 @@ export const logOut = async () => {
 // complete Student Profile
 export const completeStudentProfile = async (profileData) => {
   try {
+    // Log all fields being sent for debugging
+    console.log("Sending profile data to API:");
+    for (let [key, value] of profileData.entries()) {
+      console.log(`${key}: ${value instanceof File ? value.name : value}`);
+    }
+
     const response = await axiosInstance.post("Student/Profiles", profileData, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accessUsertoken")}`,
+        // Important: Do not manually set Content-Type for FormData
       },
     });
+
     localStorage.setItem("studentId", response.data);
     localStorage.setItem("isStudent", "Student");
     console.log("studentId", response.data);
     return response.data;
   } catch (error) {
-    console.log("completeProfile ", error);
-    console.log(error);
+    console.log("completeProfile error:", error);
+    if (error.response) {
+      console.log("Error response data:", error.response.data);
+      console.log("Error response status:", error.response.status);
+      console.log("Error response headers:", error.response.headers);
+    }
+    throw error; // Re-throw the error so it can be caught in the component
   }
 };
+
 // complete Company Profile
 export const completeCompanyProfile = async (profiledata) => {
   try {
+    console.log("Sending profile data to API:");
+    for (let [key, value] of profiledata.entries()) {
+      console.log(`${key}: ${value instanceof File ? value.name : value}`);
+    }
     const response = await axiosInstance.post(`Company/profiles`, profiledata, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accessUsertoken")}`,

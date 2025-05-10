@@ -1,14 +1,9 @@
 import { ErrorMessage, Field } from "formik";
 import { FaUniversity, FaGraduationCap } from "react-icons/fa";
 import { AiFillExclamationCircle } from "react-icons/ai";
+import PropTypes from "prop-types";
 
-function RegisterStepThree({
-  handleNext,
-  handleSkip,
-  isSubmitting,
-  isValid,
-  dirty,
-}) {
+function StudentFormThree({ handleSkip, isSubmitting, isValid, dirty }) {
   return (
     <div className="w-[920px] relative flex items-center justify-center">
       <div className="w-[404px] px-5 py-10">
@@ -170,4 +165,11 @@ function RegisterStepThree({
   );
 }
 
-export default RegisterStepThree;
+StudentFormThree.propTypes = {
+  handleSkip: PropTypes.func.isRequired,
+  isSubmitting: PropTypes.bool.isRequired,
+  isValid: PropTypes.bool.isRequired,
+  dirty: PropTypes.bool.isRequired,
+};
+
+export default StudentFormThree;

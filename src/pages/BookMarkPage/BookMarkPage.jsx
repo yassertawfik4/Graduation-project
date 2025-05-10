@@ -1,98 +1,78 @@
 import bookMarkImage from "/public/images/bookmarkImage.png";
 import { CiBookmark, CiClock2 } from "react-icons/ci";
-import { FaArrowLeftLong, FaLocationDot } from "react-icons/fa6";
-import { useState } from "react";
+import { FaArrowLeftLong, FaLocationDot, FaRegTrashCan } from "react-icons/fa6";
+import { useEffect, useState } from "react";
 import tailLogo from "/public/images/tailwind.png";
 import { FaArrowRight } from "react-icons/fa";
+import axiosInstance from "../../Api/axiosInstance";
+import Swal from "sweetalert2";
 
 function BookMarkPage() {
   // Sample data - in a real app this would come from API/context
-  const [bookmarks, setBookmarks] = useState([
-    {
-      id: 1,
-      title: "UI/UX Designer",
-      company: "Tailwind",
-      logo: tailLogo,
-      isFullTime: true,
-      isRemote: true,
-      status: "In progress",
-    },
-    {
-      id: 2,
-      title: "Front-End Developer",
-      company: "Mapbox",
-      logo: tailLogo,
-      isFullTime: true,
-      isRemote: false,
-      status: "In progress",
-    },
-    {
-      id: 3,
-      title: "Back-End Developer",
-      company: "Stripe",
-      logo: tailLogo,
-      isFullTime: true,
-      isRemote: true,
-      status: "In progress",
-    },
-    {
-      id: 4,
-      title: "Full Stack Developer",
-      company: "Vercel",
-      logo: tailLogo,
-      isFullTime: false,
-      isRemote: true,
-      status: "In progress",
-    },
-    {
-      id: 5,
-      title: "DevOps Engineer",
-      company: "AWS",
-      logo: tailLogo,
-      isFullTime: true,
-      isRemote: false,
-      status: "In progress",
-    },
-    {
-      id: 6,
-      title: "Mobile Developer",
-      company: "Google",
-      logo: tailLogo,
-      isFullTime: true,
-      isRemote: true,
-      status: "In progress",
-    },
-    {
-      id: 7,
-      title: "Data Scientist",
-      company: "Facebook",
-      logo: tailLogo,
-      isFullTime: true,
-      isRemote: false,
-      status: "In progress",
-    },
-  ]);
-
-  // Pagination state
+  const [bookmarks, setBookmarks] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const cardsPerPage = 5;
+  const cardsPerPage = 10;
 
   // You can toggle this to test empty state
   const [isEmpty, setIsEmpty] = useState(false);
 
-  // Calculate pagination values
-  const indexOfLastCard = currentPage * cardsPerPage;
-  const indexOfFirstCard = indexOfLastCard - cardsPerPage;
-  const currentCards = bookmarks.slice(indexOfFirstCard, indexOfLastCard);
-  const totalPages = Math.ceil(bookmarks.length / cardsPerPage);
-
-  // Handle page changes
-  const goToPage = (pageNumber) => {
-    if (pageNumber >= 1 && pageNumber <= totalPages) {
-      setCurrentPage(pageNumber);
+  const handelGetBookMark = async () => {
+    try {
+      const response = await axiosInstance.get(
+        `bookmarks?pageNumber=${currentPage}&pageSize=${cardsPerPage}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessUsertoken")}`,
+          },
+        }
+      );
+      setBookmarks(response.data.items);
+      setTotalPages(response.data.totalPages);
+    } catch (error) {
+      console.log(error);
     }
   };
+  const handleDeleteBookmark = async (id) => {
+    try {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#095544",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "Cancel",
+      });
 
+      if (result.isConfirmed) {
+        await axiosInstance.delete(`Bookmarks/internships/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessUsertoken")}`,
+          },
+        });
+        handelGetBookMark();
+        Swal.fire({
+          icon: "success",
+          title: "Deleted!",
+          text: "The internship has been deleted from your bookmarks",
+          confirmButtonColor: "#095544",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong!",
+        confirmButtonColor: "#095544",
+      });
+    }
+  };
+  useEffect(() => {
+    handelGetBookMark();
+  }, [currentPage]);
   const BookmarkCard = ({ bookmark }) => {
     return (
       <div className="bg-white rounded-lg p-6 shadow-lg mb-6 max-w-7xl w-full mx-auto">
@@ -116,8 +96,11 @@ function BookMarkPage() {
               </p>
             </div>
           </div>
-          <div>
-            <CiBookmark size={35} className="cursor-pointer" />
+          <div
+            className="cursor-pointer"
+            onClick={() => handleDeleteBookmark(bookmark.id)}
+          >
+            <FaRegTrashCan size={24} className="cursor-pointer text-red-600" />
           </div>
         </div>
 
@@ -166,7 +149,7 @@ function BookMarkPage() {
         {/* Previous button */}
         <li>
           <button
-            onClick={() => goToPage(currentPage - 1)}
+            onClick={() => setCurrentPage(currentPage - 1)}
             disabled={currentPage === 1}
             className={`grid size-10 place-content-center rounded border ${
               currentPage === 1
@@ -199,7 +182,7 @@ function BookMarkPage() {
               </div>
             ) : (
               <button
-                onClick={() => goToPage(number)}
+                onClick={() => setCurrentPage(number)}
                 className="block size-10 rounded border border-gray-200 text-center text-sm/10 font-medium transition-colors hover:bg-gray-50"
               >
                 {number}
@@ -211,7 +194,7 @@ function BookMarkPage() {
         {/* Next button */}
         <li>
           <button
-            onClick={() => goToPage(currentPage + 1)}
+            onClick={() => setCurrentPage(currentPage + 1)}
             disabled={currentPage === totalPages}
             className={`grid size-10 place-content-center rounded border ${
               currentPage === totalPages
@@ -269,13 +252,13 @@ function BookMarkPage() {
               </h1>
             </div>
             <div className="flex flex-col items-center">
-              {currentCards.map((bookmark) => (
+              {bookmarks.map((bookmark) => (
                 <BookmarkCard key={bookmark.id} bookmark={bookmark} />
               ))}
             </div>
 
             {/* Pagination component */}
-            {bookmarks.length > cardsPerPage && <Pagination />}
+            {totalPages > 1 && <Pagination />}
           </div>
         )}
       </div>

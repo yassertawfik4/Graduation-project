@@ -6,24 +6,49 @@ import {
   FaEllipsisV,
   FaPlus,
   FaSave,
-  FaTimes,
 } from "react-icons/fa";
+import axiosInstance from "../../../Api/axiosInstance";
+import Swal from "sweetalert2";
 
-function StudentResume() {
-  const [resumes, setResumes] = useState([
-    { name: "Front-End Developer.pdf", size: "1.3 MB" },
-    { name: "Product Designer.pdf", size: "4.7 MB" },
-  ]);
-  const [menuIndex, setMenuIndex] = useState(null);
-  const [editingIndex, setEditingIndex] = useState(null);
-  const [newFileName, setNewFileName] = useState("");
+function StudentResume({ data }) {
   const [isAdding, setIsAdding] = useState(false);
   const [newFile, setNewFile] = useState(null);
+  const [resumeUrl, setResumeUrl] = useState([]); // ✅
+  const isCompany = localStorage.getItem("isCompany");
 
-  const handleDelete = (index) => {
-    setResumes(resumes.filter((_, i) => i !== index));
-    setMenuIndex(null);
+  const handelAddResume = async () => {
+    if (!newFile?.file) {
+      Swal.fire("No file selected", "Please select a file first.", "warning");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", newFile.file); // <-- مهم جداً أن يكون "file" وليس أي اسم آخر
+
+    try {
+      const response = await axiosInstance.post(
+        "Student/upload-resume",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("accessUsertoken")}`,
+          },
+        }
+      );
+
+      Swal.fire("Success", "Resume uploaded successfully", "success");
+
+      // لو الاستجابة ترجع الرابط أو البيانات المرفوعة
+      setResumeUrl((prev) => [...prev, response.data]);
+      setIsAdding(false);
+      setNewFile(null);
+    } catch (error) {
+      Swal.fire("Error", "Failed to upload resume", "error");
+      console.error(error);
+    }
   };
+  const handleDelete = (id) => {};
 
   const handleFileSelect = (event) => {
     const file = event.target.files[0];
@@ -33,33 +58,16 @@ function StudentResume() {
     }
   };
 
-  const handleSaveNew = () => {
-    if (newFile) {
-      setResumes([...resumes, { name: newFile.name, size: newFile.size }]);
-    }
-    setNewFile(null);
-    setIsAdding(false);
-  };
-
   const handleCancel = () => {
     setIsAdding(false);
     setNewFile(null);
   };
 
-  const handleSaveEdit = (index) => {
-    const newResumes = [...resumes];
-    newResumes[index].name = newFileName || newResumes[index].name;
-    setResumes(newResumes);
-    setEditingIndex(null);
-    setMenuIndex(null);
-    setNewFileName("");
-  };
-
   return (
     <div className="mt-6 bg-white border border-[#C9C9C9] rounded-lg p-6">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold">Your CV/Resume</h2>
-        {!isAdding && (
+        <h2 className="text-xl font-bold">Your CV/Resume</h2>{" "}
+        {!isAdding && isCompany !== "Company" && (
           <button
             onClick={() => setIsAdding(true)}
             className="flex items-center gap-2 px-4 py-2 bg-transparent cursor-pointer font-bold text-[#8D9499] border border-[#C9C9C9] rounded-md hover:bg-gray-100"
@@ -71,68 +79,30 @@ function StudentResume() {
       </div>
 
       <div className="flex flex-wrap gap-6">
-        {resumes.map((resume, index) => (
-          <div
-            key={index}
-            className="relative flex items-center justify-between bg-gray-100 p-4 rounded-lg w-full md:w-auto"
-          >
-            <div className="flex items-center gap-3">
-              <span className="text-lg">📄</span>
-              <div>
-                {editingIndex === index ? (
-                  <input
-                    type="text"
-                    className="border p-1 rounded-md"
-                    defaultValue={resume.name}
-                    onChange={(e) => setNewFileName(e.target.value)}
-                  />
-                ) : (
-                  <>
-                    <p className="font-medium">{resume.name}</p>
-                    <p className="text-sm text-gray-500">{resume.size}</p>
-                  </>
-                )}
+        {data && data.resumeUrl ? (
+          <div className="flex flex-wrap gap-6">
+            <div className="relative flex items-center justify-between bg-gray-100 p-4 rounded-lg w-full md:w-auto">
+              <div className="flex items-center gap-3">
+                <span className="text-lg">📄</span>
+                <div>
+                  <p className="font-medium">
+                    {data.resumeUrl.split("/").pop()}
+                  </p>
+                  <a
+                    href={data.resumeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-blue-600 underline"
+                  >
+                    View / Download
+                  </a>
+                </div>
               </div>
             </div>
-
-            <div className="relative">
-              <button
-                onClick={() => setMenuIndex(menuIndex === index ? null : index)}
-                className="p-2 text-gray-500 hover:text-gray-700"
-              >
-                <FaEllipsisV size={18} />
-              </button>
-
-              {menuIndex === index && (
-                <div className="absolute right-0 mt-2 w-32 bg-white shadow-md rounded-md p-2 z-10">
-                  {editingIndex === index ? (
-                    <button
-                      onClick={() => handleSaveEdit(index)}
-                      className="block w-full text-left px-4 py-2 text-blue-500 hover:bg-gray-100"
-                    >
-                      <FaSave className="inline mr-2" /> Save
-                    </button>
-                  ) : (
-                    <>
-                      <button
-                        onClick={() => setEditingIndex(index)}
-                        className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                      >
-                        <FaPen className="inline mr-2" /> Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(index)}
-                        className="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
-                      >
-                        <FaTrash className="inline mr-2" /> Delete
-                      </button>
-                    </>
-                  )}
-                </div>
-              )}
-            </div>
           </div>
-        ))}
+        ) : (
+          <p className="text-gray-500">No resume uploaded yet.</p>
+        )}
       </div>
 
       {isAdding && (
@@ -173,7 +143,7 @@ function StudentResume() {
               Cancel
             </button>
             <button
-              onClick={handleSaveNew}
+              onClick={handelAddResume}
               className="px-4 py-2 bg-[#3A4C59] font-medium text-white cursor-pointer rounded-md"
             >
               Update

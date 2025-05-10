@@ -5,61 +5,34 @@ import { IoIosLink } from "react-icons/io";
 import { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import axiosInstance from "../../Api/axiosInstance";
+import Swal from "sweetalert2";
 
 function CompanyProfileHeader({ company, handleGetCompany }) {
   const [isEditing, setIsEditing] = useState(false);
 
   const [about, setAbout] = useState({
-    companyName: "",
+    name: "",
     description: "",
     industry: "",
     size: "",
     websiteUrl: "",
   });
-  // const [socialIcons, setSocialIcons] = useState([
-  //   {
-  //     icon: <FaGithub size={28} />,
-  //     url: "https://github.com/framertech",
-  //     name: "GitHub",
-  //   },
-  //   {
-  //     icon: <IoIosLink size={28} />,
-  //     url: "https://framer.com",
-  //     name: "Website",
-  //   },
-  //   {
-  //     icon: <FaLinkedin size={28} />,
-  //     url: "https://linkedin.com/company/framer",
-  //     name: "LinkedIn",
-  //   },
-  // ]);
-  const handleAddabout = async () => {
-    const data = {
-      name: about.companyName,
-      description: about.description,
-      industry: about.industry,
-      companySize: about.size,
-      websiteUrl: about.websiteUrl,
-    };
-    try {
-      const response = await axiosInstance.patch(
-        `Company/profiles/me/basic`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessUsertoken")}`,
-          },
-        }
-      );
-      console.log(response);
-      handleGetCompany();
-    } catch (error) {
-      console.log(error);
-    }
+  const [profileImage, setProfileImage] = useState(companyLogo);
+  const fileInputRef = useRef(null);
+
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+    setAbout({ ...about, [name]: value });
+  };
+
+  const handleSave = () => {
+    console.log("Saving company data:", { about });
+    setIsEditing(false);
+    handelEdit();
   };
   const handelGetAbout = async () => {
     try {
-      const response = await axiosInstance.get(`Company/profiles/basic`, {
+      const response = await axiosInstance.get(`Company/profiles/info`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessUsertoken")}`,
         },
@@ -70,40 +43,31 @@ function CompanyProfileHeader({ company, handleGetCompany }) {
       console.log(error);
     }
   };
-  const [profileImage, setProfileImage] = useState(companyLogo);
-  const fileInputRef = useRef(null);
-
-
-  const handleOnChange = (e) => {
-    const { name, value } = e.target;
-    setAbout({ ...about, [name]: value });
-  };
-
- 
-
-  const handleSave = () => {
-    console.log("Saving company data:", { about });
-    setIsEditing(false);
-    handleAddabout();
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setProfileImage(event.target.result);
-      };
-      reader.readAsDataURL(file);
+  const handelEdit = async () => {
+    try {
+      const response = await axiosInstance.patch(
+        `Company/profiles/info`,
+        {
+          name: about.name,
+          description: about.description,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessUsertoken")}`,
+          },
+        }
+      );
+      Swal.fire("Updated!", "Your profile has been updated.", "success");
+      console.log(response);
+      handleGetCompany();
+    } catch (error) {
+      console.log(error);
     }
-  };
-
-  const handleImageClick = () => {
-    fileInputRef.current.click();
   };
   useEffect(() => {
     handelGetAbout();
   }, []);
+
   return (
     <div className="bg-white shadow rounded-lg p-6">
       <div className="relative">
@@ -118,7 +82,7 @@ function CompanyProfileHeader({ company, handleGetCompany }) {
             <div className="flex items-center justify-between">
               <div
                 className="w-40 h-40 relative bottom-10 rounded-full border-4 border-white shadow-lg overflow-hidden cursor-pointer"
-                onClick={handleImageClick}
+                onClick={"handleImageClick"}
               >
                 <img
                   src={profileImage}
@@ -132,7 +96,7 @@ function CompanyProfileHeader({ company, handleGetCompany }) {
                   type="file"
                   ref={fileInputRef}
                   accept="image/*"
-                  onChange={handleImageChange}
+                  onChange={"handleImageChange"}
                   className="hidden"
                 />
               </div>
@@ -163,47 +127,11 @@ function CompanyProfileHeader({ company, handleGetCompany }) {
                     </label>
                     <input
                       type="text"
-                      name="companyName"
-                      value={about.companyName}
+                      name="name"
+                      value={about.name}
                       onChange={handleOnChange}
                       placeholder="Your company's name"
                       className="text-[#3A4C59] font-bold border outline-none border-[#C9C9C9] px-2 py-2 rounded-sm w-full"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[17px] text-gray-600 font-bold my-3">
-                      Industry
-                    </label>
-                    <input
-                      name="industry"
-                      value={about.industry}
-                      onChange={handleOnChange}
-                      placeholder="Your company's industry"
-                      className="text-[#3A4C59] font-bold border outline-none border-[#C9C9C9] px-2 py-1 rounded-md w-full"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[17px] text-gray-600 font-bold my-3">
-                      companySize
-                    </label>
-                    <input
-                      name="size"
-                      value={about.size}
-                      onChange={handleOnChange}
-                      placeholder="Your company's companySize"
-                      className="text-[#3A4C59] font-bold border outline-none border-[#C9C9C9] px-2 py-1 rounded-md w-full"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[17px] text-gray-600 font-bold my-3">
-                      websiteUrl
-                    </label>
-                    <input
-                      name="websiteUrl"
-                      value={about.websiteUrl}
-                      onChange={handleOnChange}
-                      placeholder="Your company's websiteUrl"
-                      className="text-[#3A4C59] font-bold border outline-none border-[#C9C9C9] px-2 py-1 rounded-md w-full"
                     />
                   </div>
                 </div>
@@ -214,10 +142,10 @@ function CompanyProfileHeader({ company, handleGetCompany }) {
           <div className="flex items-center justify-between">
             <div
               className="w-40 h-40 relative bottom-10 rounded-full border-4 border-white shadow-lg overflow-hidden flex-shrink-0 cursor-pointer"
-              onClick={handleImageClick}
+              onClick={"handleImageClick"}
             >
               <img
-                src={profileImage}
+                src={company?.logo}
                 alt="Company Logo"
                 className="w-full h-full object-cover"
               />
@@ -228,7 +156,7 @@ function CompanyProfileHeader({ company, handleGetCompany }) {
                 type="file"
                 ref={fileInputRef}
                 accept="image/*"
-                onChange={handleImageChange}
+                onChange={"handleImageChange"}
                 className="hidden"
               />
             </div>
@@ -236,7 +164,7 @@ function CompanyProfileHeader({ company, handleGetCompany }) {
             <div className="flex flex-grow justify-between ml-6">
               <div className="flex flex-col gap-2 flex-grow mt-2">
                 <h2 className="text-3xl font-bold font-[roboto]">
-                  {company?.basicInfo?.companyName || "Company Name"}
+                  {company?.info?.name || "Company Name"}
                 </h2>
                 <p className="text-[#3A4C59] font-bold max-w-[650px] break-words">
                   {company?.basicInfo?.industry || "Industry Type"}
@@ -274,7 +202,7 @@ function CompanyProfileHeader({ company, handleGetCompany }) {
               <h2 className="block text-[22px] font-[roboto] text-[#000000] font-bold my-3">
                 Description
               </h2>
-              {company?.basicInfo?.description}
+              {company?.info?.description}
             </div>
           )}
           {isEditing && (

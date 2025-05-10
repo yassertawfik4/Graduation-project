@@ -24,6 +24,7 @@ function CompanyStepTwo({
         });
         return;
       }
+
       if (!file.type.startsWith("image/")) {
         Swal.fire({
           icon: "error",
@@ -32,12 +33,15 @@ function CompanyStepTwo({
         });
         return;
       }
-      setFieldValue("profilePictureUrl", file);
-      console.log(file);
+
+      // Store the actual File object for FormData submission
+      setFieldValue("profilePicture", file);
+      console.log("File selected:", file.name, file.type, file.size);
+
+      // Create preview image
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64Image = reader.result;
-        setFieldValue("profilePictureUrl", base64Image);
         setPreviewImage(base64Image);
       };
       reader.readAsDataURL(file);
@@ -69,6 +73,8 @@ function CompanyStepTwo({
             </div>
             <input
               type="file"
+              id="profilePicture"
+              name="profilePicture"
               accept="image/*"
               onChange={handleImageChange}
               className="hidden"

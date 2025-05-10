@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import axiosInstance from "../../../Api/axiosInstance";
 import Swal from "sweetalert2";
 
-function StudentPersonalInformation({ data }) {
+function StudentPersonalInformation({ data, handleGetProfile }) {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState({
@@ -109,16 +109,6 @@ function StudentPersonalInformation({ data }) {
           Personal Information
         </h3>
 
-        {!isEditing && (
-          <button
-            onClick={() => setIsEditing(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-transparent cursor-pointer font-bold text-[#8D9499] border border-[#C9C9C9] rounded-md hover:bg-gray-100"
-            disabled={loading}
-          >
-            <FaPen size={15} />
-            Edit Information
-          </button>
-        )}
       </div>
 
       {isEditing ? (
@@ -232,17 +222,6 @@ function StudentPersonalInformation({ data }) {
             </div>
           </div>
 
-          <div className="mt-4">
-            <label className="block text-sm text-[#8D9499]">Bio</label>
-            <textarea
-              name="bio"
-              value={userData.bio}
-              onChange={handleChange}
-              rows="4"
-              className="text-[#3A4C59] font-semibold border border-gray-300 px-2 py-1 rounded-md w-full mt-1"
-            />
-          </div>
-
           {/* Save and Cancel buttons */}
           <div className="flex gap-2 mt-6">
             <button
@@ -289,12 +268,16 @@ function StudentPersonalInformation({ data }) {
           </div>
         </div>
       ) : (
-        <div className="flex gap-6 text-gray-700">
+        <div className="flex  gap-10 text-gray-700">
           {/* First Column */}
-          <div className="w-1/2">
+          <div className="w-36">
             <p className="text-[#8D9499] font-semibold">Full Name</p>
             <p className="text-[#3A4C59] font-semibold mb-4">
               {data?.basicInfo?.fullName || "Not provided"}
+            </p>
+            <p className="text-[#8D9499] font-semibold">Role</p>
+            <p className="text-[#3A4C59] font-semibold mb-4">
+              {data?.education?.role || "Not provided"}
             </p>
 
             <p className="text-[#8D9499] font-semibold">Phone Number</p>
@@ -314,36 +297,27 @@ function StudentPersonalInformation({ data }) {
           </div>
 
           {/* Second Column */}
-          <div className="w-1/2">
+          <div className=" ">
             <p className="text-[#8D9499] font-semibold">University</p>
             <p className="text-[#3A4C59] font-semibold mb-4">
-              {data?.basicInfo?.university || "Not provided"}
+              {data?.education?.university || "Not provided"}
             </p>
 
             <p className="text-[#8D9499] font-semibold">Faculty</p>
             <p className="text-[#3A4C59] font-semibold mb-4">
-              {data?.basicInfo?.faculty || "Not provided"}
+              {data?.education?.faculty || "Not provided"}
             </p>
 
             <p className="text-[#8D9499] font-semibold">Enrollment Year</p>
             <p className="text-[#3A4C59] font-semibold mb-4">
-              {data?.basicInfo?.enrollmentYear || "Not provided"}
+              {data?.education?.enrollmentYear || "Not provided"}
             </p>
 
             <p className="text-[#8D9499] font-semibold">Graduation Year</p>
             <p className="text-[#3A4C59] font-semibold">
-              {data?.basicInfo?.graduationYear || "Not provided"}
+              {data?.education?.graduationYear || "Not provided"}
             </p>
           </div>
-        </div>
-      )}
-
-      {!isEditing && data?.basicInfo?.bio && (
-        <div className="mt-6">
-          <p className="text-[#8D9499] font-semibold">Bio</p>
-          <p className="text-[#3A4C59] font-medium mt-2">
-            {data.basicInfo.bio}
-          </p>
         </div>
       )}
     </div>

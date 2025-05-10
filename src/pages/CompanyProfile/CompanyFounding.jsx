@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../../Api/axiosInstance";
+import Swal from "sweetalert2";
 
-function CompanyFounding({ company }) {
+function CompanyFounding({ company, handleGetCompany }) {
   const [getFounding, setGetFounding] = useState({
     name: "",
     industry: "",
     description: "",
     websiteUrl: "",
-    companySize: "",
+    size: "",
+    yearOfEstablishment: "",
   });
   const [isEditing, setIsEditing] = useState(false);
   const handleChange = (e) => {
@@ -27,6 +29,33 @@ function CompanyFounding({ company }) {
       console.log(error);
     }
   };
+  const handelEditFounding = async () => {
+    
+    try {
+      await axiosInstance.patch(
+        `Company/profiles/basic`,
+        {
+          industry: getFounding.industry,
+          websiteUrl: getFounding.websiteUrl,
+          companySize: getFounding.size,
+          yearOfEstablishment: getFounding.yearOfEstablishment,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessUsertoken")}`,
+          },
+        }
+      );
+      Swal.fire("Updated!", "Your profile has been updated.", "success");
+      setIsEditing(false);
+      handleGetCompany();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleSave = () => {
+    handelEditFounding();
+  };
   useEffect(() => {
     handleGetFounding();
   }, []);
@@ -34,12 +63,29 @@ function CompanyFounding({ company }) {
     <div className="border border-[#C9C9C9] rounded-lg p-4 bg-white shadow-sm">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-bold mb-4 font-[roboto]">Founding Info</h2>
-        <button
-          onClick={() => setIsEditing(true)}
-          className="cursor-pointer border border-[#C9C9C9] rounded-lg px-4 py-2"
-        >
-          Edit
-        </button>
+        {isEditing ? (
+          <div className="flex gap-2 items-center">
+            <button
+              onClick={handleSave}
+              className="cursor-pointer border border-[#C9C9C9] rounded-lg px-4 py-2"
+            >
+              Save
+            </button>
+            <button
+              onClick={() => setIsEditing(false)}
+              className="cursor-pointer border border-[#C9C9C9] rounded-lg px-4 py-2"
+            >
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setIsEditing(true)}
+            className="cursor-pointer border border-[#C9C9C9] rounded-lg px-4 py-2"
+          >
+            Edit
+          </button>
+        )}
       </div>
       {isEditing ? (
         <div className="grid grid-cols-2 gap-4 text-gray-700">
@@ -47,7 +93,7 @@ function CompanyFounding({ company }) {
           <div className="flex flex-col gap-2">
             <div className="flex flex-col gap-2">
               <label className="text-[#8D9499] font-semibold">
-                Industry Type
+                Industry name
               </label>
               <input
                 type="text"
@@ -59,32 +105,43 @@ function CompanyFounding({ company }) {
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-[#8D9499] font-semibold">
-                Industry Type
+                Year Of Establishment
               </label>
-              <input
+              <select
                 type="text"
+                name="yearOfEstablishment"
+                value={getFounding.yearOfEstablishment}
+                onChange={handleChange}
                 className="border border-[#C9C9C9] rounded-lg px-4 py-2"
-              />
+              >
+                {Array.from({ length: 100 }, (_, i) => (
+                  <option key={i} value={2025 - i}>
+                    {2025 - i}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
           {/* العمود الثاني */}
           <div className="flex flex-col gap-2">
             <div className="flex flex-col gap-2">
-              <label className="text-[#8D9499] font-semibold">
-                Industry Type
-              </label>
+              <label className="text-[#8D9499] font-semibold">Size</label>
               <input
                 type="text"
+                name="size"
+                value={getFounding.size}
+                onChange={handleChange}
                 className="border border-[#C9C9C9] rounded-lg px-4 py-2"
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label className="text-[#8D9499] font-semibold">
-                Industry Type
-              </label>
+              <label className="text-[#8D9499] font-semibold">websiteUrl</label>
               <input
                 type="text"
+                name="websiteUrl"
+                value={getFounding.websiteUrl}
+                onChange={handleChange}
                 className="border border-[#C9C9C9] rounded-lg px-4 py-2"
               />
             </div>
@@ -102,7 +159,9 @@ function CompanyFounding({ company }) {
             <p className="text-[#8D9499] font-semibold mt-4">
               Year of Establishment
             </p>
-            <p className="text-[#3A4C59] font-semibold">2020</p>
+            <p className="text-[#3A4C59] font-semibold">
+              {company?.basicInfo?.yearOfEstablishment}
+            </p>
           </div>
 
           {/* العمود الثاني */}

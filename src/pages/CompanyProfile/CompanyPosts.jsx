@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function CompanyPosts({ company }) {
   return (
     <div className="border border-[#C9C9C9] rounded-lg p-4 bg-white shadow-sm">
@@ -20,10 +22,7 @@ function CompanyPosts({ company }) {
                 <div className="space-y-1">
                   <h3 className="font-semibold text-gray-900">{item?.title}</h3>
                   <p className="text-sm text-gray-600 font-medium">
-                    {item?.type} • 27 days remaining
-                  </p>
-                  <p className="text-sm text-gray-600 font-medium">
-                    Salary : {item?.salary} : {item?.currency}
+                    {item?.type}
                   </p>
                 </div>
                 <div
@@ -69,12 +68,15 @@ function CompanyPosts({ company }) {
                       strokeLinecap="round"
                     />
                   </svg>
-                  799 Applications
+                  {item.applicationCount} Applications
                 </div>
                 <div className="text-right">
-                  <button className="bg-[#095544] text-white text-sm px-4 py-2 rounded-md">
+                  <Link
+                    to={`/internShip/${item.id}/application`}
+                    className="bg-[#095544] text-white text-sm px-4 py-2 rounded-md cursor-pointer"
+                  >
                     View Applications
-                  </button>
+                  </Link>
                 </div>
               </div>
             ))}

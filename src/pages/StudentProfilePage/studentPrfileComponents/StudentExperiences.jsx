@@ -9,6 +9,7 @@ function StudentExperiences({ data }) {
   const [isEditing, setIsEditing] = useState(false);
   const [experiences, setExperiences] = useState([]);
   const [loading, setLoading] = useState(false);
+  const isCompany = localStorage.getItem("isCompany");
   const [currentExperience, setCurrentExperience] = useState({
     startDate: "",
     endDate: "",
@@ -45,32 +46,54 @@ function StudentExperiences({ data }) {
 
   // Handle adding/updating experience
   const handleUpdateExperience = async () => {
+    // Validate required fields
+    if (
+      !currentExperience.jobTitle ||
+      !currentExperience.companyName ||
+      !currentExperience.startDate ||
+      !currentExperience.endDate
+    ) {
+      toast.error("Please fill all required fields");
+      return;
+    }
+
+    // Format dates for API
+    const formattedExperience = {
+      jobTitle: currentExperience.jobTitle,
+      companyName: currentExperience.companyName,
+      startDate: new Date(currentExperience.startDate).toISOString(),
+      endDate: new Date(currentExperience.endDate).toISOString(),
+    };
+
+    // If editing, show confirmation
+    if (currentExperience.id) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "Do you want to update this experience?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3A4C59",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, update it!",
+        cancelButtonText: "Cancel",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          await updateExperienceOnServer(formattedExperience);
+        }
+      });
+    } else {
+      // If adding new, just proceed
+      await updateExperienceOnServer(formattedExperience);
+    }
+  };
+
+  const updateExperienceOnServer = async (formattedExperience) => {
     try {
       setLoading(true);
-
-      // Validate required fields
-      if (
-        !currentExperience.jobTitle ||
-        !currentExperience.companyName ||
-        !currentExperience.startDate ||
-        !currentExperience.endDate
-      ) {
-        toast.error("Please fill all required fields");
-        setLoading(false);
-        return;
-      }
-
-      // Format dates for API
-      const formattedExperience = {
-        ...currentExperience,
-        startDate: new Date(currentExperience.startDate).toISOString(),
-        endDate: new Date(currentExperience.endDate).toISOString(),
-      };
-
       if (currentExperience.id) {
         // Update existing experience on the server
         await axiosInstance.put(
-          `Student/profiles/me/experience/${currentExperience.id}`,
+          `Student/profiles/${currentExperience.id}/experience`,
           formattedExperience,
           {
             headers: {
@@ -80,14 +103,11 @@ function StudentExperiences({ data }) {
             },
           }
         );
-
-        // Update local state
         setExperiences((prev) =>
           prev.map((exp) =>
-            exp.id === currentExperience.id ? currentExperience : exp
+            exp.id === currentExperience.id ? { ...currentExperience } : exp
           )
         );
-
         toast.success("Experience updated successfully");
       } else {
         // Add new experience to the server
@@ -102,24 +122,18 @@ function StudentExperiences({ data }) {
             },
           }
         );
-
-        // Add to local state with the ID from the response
         const newExperience = {
           ...currentExperience,
           id: response.data.id || crypto.randomUUID(),
         };
-
         setExperiences((prev) => [...prev, newExperience]);
         toast.success("Experience added successfully");
       }
-
-      // Reset current experience and exit editing mode
       setCurrentExperience({
         startDate: "",
         endDate: "",
         jobTitle: "",
         companyName: "",
-        description: "",
       });
       setIsEditing(false);
     } catch (error) {
@@ -207,7 +221,7 @@ function StudentExperiences({ data }) {
     <div className="mt-6 bg-white border border-[#C9C9C9] rounded-lg p-6">
       <div className="flex justify-between items-center mb-4 pb-5">
         <h2 className="text-xl font-bold text-[#3A4C59]">Experiences</h2>
-        {!isEditing && (
+        {!isEditing && isCompany !== "Company" && (
           <button
             onClick={handleAddNewExperience}
             className="flex items-center gap-2 px-4 py-2 bg-transparent cursor-pointer font-bold text-[#8D9499] border border-[#C9C9C9] rounded-md hover:bg-gray-100"
@@ -315,7 +329,6 @@ function StudentExperiences({ data }) {
                   endDate: "",
                   jobTitle: "",
                   companyName: "",
-                  description: "",
                 });
                 setIsEditing(false);
               }}
@@ -372,13 +385,15 @@ function StudentExperiences({ data }) {
           ) : (
             <div className="text-center py-8">
               <p className="text-[#3A4C59] mb-4">No experiences added yet.</p>
-              <button
-                onClick={handleAddNewExperience}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-[#3A4C59] text-white rounded-md hover:bg-opacity-90"
-              >
-                <FaPlus size={14} />
-                Add Your First Experience
-              </button>
+              {isCompany !== "Company" && (
+                <button
+                  onClick={handleAddNewExperience}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#3A4C59] text-white rounded-md hover:bg-opacity-90"
+                >
+                  <FaPlus size={14} />
+                  Add Your First Experience
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -391,12 +406,10 @@ StudentExperiences.propTypes = {
   data: PropTypes.shape({
     experiences: PropTypes.arrayOf(
       PropTypes.shape({
-        id: PropTypes.string,
         jobTitle: PropTypes.string,
         companyName: PropTypes.string,
         startDate: PropTypes.string,
         endDate: PropTypes.string,
-        description: PropTypes.string,
       })
     ),
   }),

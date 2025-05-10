@@ -9,6 +9,11 @@ import CompanyProfile from "./pages/CompanyProfile/CompanyProfile";
 import BookMarkPage from "./pages/BookMarkPage/BookMarkPage";
 import RoadMapDetailes from "./pages/RoadMap/RoadMapDetailes";
 import InternDetails from "./pages/HomeContainer/InternDetails";
+import Overview from "./pages/CompanyPages/Overview";
+import Applications from "./pages/CompanyPages/Applications";
+import Posts from "./pages/CompanyPages/Posts";
+import CreateInterShip from "./pages/CompanyPages/CompanyCreation/CreateInterShip";
+import CreateProject from "./pages/CompanyPages/CompanyCreation/CreateProject";
 
 const HomePage = lazy(() => import("./pages/HomeContainer/HomePage"));
 const UserLoginPage = lazy(() => import("./pages/users/Login/UserLogin"));
@@ -22,6 +27,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation(); // 📍 للوصول للمسار الحالي
+  const isCompany = localStorage.getItem("isCompany");
 
   useEffect(() => {
     setLoading(true);
@@ -56,6 +62,18 @@ function App() {
 
           <Route path="/Roadmaps" element={<RoadMap />} />
           <Route path="/roadmap/:roadmapid" element={<RoadMapDetailes />} />
+          {isCompany && (
+            <>
+              <Route path="/Overview" element={<Overview />} />
+              <Route
+                path="/internShip/:internshipId/application"
+                element={<Applications />}
+              />
+              <Route path="/Post" element={<Posts />} />
+              <Route path="/post/addinternship" element={<CreateInterShip />} />
+              <Route path="/post/addproject" element={<CreateProject />} />
+            </>
+          )}
         </Routes>
       </Suspense>
 

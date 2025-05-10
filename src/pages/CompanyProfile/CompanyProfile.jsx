@@ -5,19 +5,17 @@ import axiosInstance from "../../Api/axiosInstance";
 import { useParams } from "react-router-dom";
 import CompanyPosts from "./CompanyPosts";
 import CompanyFounding from "./CompanyFounding";
+import CompanyContact from "./CompanyContact";
 function CompanyProfile() {
   const [company, setCompany] = useState({});
-  const { companyid } = useParams();
+  // const { companyid } = useParams();
   const handleGetCompany = async () => {
     try {
-      const response = await axiosInstance.get(
-        `Company/profiles/${companyid}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessUsertoken")}`,
-          },
-        }
-      );
+      const response = await axiosInstance.get(`Company/profiles`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessUsertoken")}`,
+        },
+      });
 
       console.log(response.data);
       setCompany(response.data);
@@ -39,31 +37,16 @@ function CompanyProfile() {
         />
 
         {/* Founding Info */}
-        <CompanyFounding company={company} />
+        <CompanyFounding
+          company={company}
+          handleGetCompany={handleGetCompany}
+        />
 
         {/* Contact */}
-        <div className="border border-[#C9C9C9] rounded-lg p-4 bg-white shadow-sm">
-          <h2 className="text-lg font-bold mb-4 font-[roboto]">Contact</h2>
-          <div className="grid grid-cols-2 gap-4 text-gray-700">
-            {/* العمود الأول */}
-            <div>
-              <p className="text-[#8D9499] font-semibold">Email</p>
-              <p className="text-[#3A4C59] font-semibold">@gmail.com</p>
-            </div>
-
-            {/* العمود الثاني */}
-            <div>
-              <p className="text-[#8D9499] font-semibold">Address</p>
-              <p className="text-[#3A4C59] font-semibold">
-                {company?.address?.street} , {company?.address?.city} ,{" "}
-                {company?.address?.governorate}
-              </p>
-            </div>
-          </div>
-        </div>
+        <CompanyContact company={company} handleGetCompany={handleGetCompany} />
 
         {/* Recent Posts */}
-        <CompanyPosts company={company} />
+        <CompanyPosts company={company} handleGetCompany={handleGetCompany} />
       </div>
     </div>
   );

@@ -26,9 +26,9 @@ function UserRegister() {
 
     // Student specific fields
     fullName: "",
-    profilePictureUrl: "https://localhost:3000", // Fixed the URL format here
+    profilePicture: null,
     bio: "",
-    phoneNumber: "+2",
+    phoneNumber: "",
     age: "",
     gender: "",
     university: "",
@@ -82,13 +82,12 @@ function UserRegister() {
       if (isStudent) {
         // Student validation for step 2
         if (!values.fullName) errors.fullName = "Full Name is required";
+        if (!values.gender) errors.gender = "Gender is required";
         if (!values.phoneNumber) {
           errors.phoneNumber = "Phone Number is required";
-        } else if (!/^\d+$/.test(values.phoneNumber)) {
-          errors.phoneNumber = "Phone Number must contain only numbers";
-        } else if (!/^0\d{10}$/.test(values.phoneNumber)) {
+        } else if (!/^\+?\d+$/.test(values.phoneNumber)) {
           errors.phoneNumber =
-            "Phone Number must start with 0 and be exactly 11 digits";
+            "Phone Number must contain only numbers with optional + prefix";
         }
       } else {
         // Company validation for step 2
@@ -144,45 +143,76 @@ function UserRegister() {
         }
       } else {
         // Prepare profile data based on user type
-        let profileData;
         let response;
-        if (isStudent) {
-          profileData = {
-            fullName: values.fullName,
-            university: values.university,
-            faculty: values.faculty,
-            graduationYear: parseInt(values.graduationYear, 10),
-            enrollmentYear: parseInt(values.enrollmentYear, 10),
-            age: parseInt(values.age, 10),
-            gender: values.gender,
-            phoneNumber: `+2${values.phoneNumber}`,
-            bio: values.bio,
-            profilePictureUrl: values.profilePictureUrl,
-          };
-          // Call student-specific endpoint
-          response = await completeStudentProfile(profileData);
-        } else {
-          profileData = {
-            companyName: values.companyName,
-            industry: values.industry,
-            governorate: values.governorate,
-            taxId: values.taxId,
-            city: values.city,
-            street: values.street,
-          };
-          // Call company-specific endpoint
-          response = await completeCompanyProfile(profileData);
-        }
-        console.log(profileData);
-        if (response) {
-          Swal.fire({
-            icon: "success",
-            title: "Profile Completed!",
-            text: "Your profile has been successfully updated.",
-          });
-          navigate("/");
-        } else {
-          const errorMessage = response?.error || "Failed to complete profile.";
+        try {
+          if (isStudent) {
+            const formData = new FormData();
+            // Ensure all required fields are included and formatted correctly
+            formData.append("fullName", values.fullName);
+            formData.append("university", values.university);
+            formData.append("faculty", values.faculty);
+            formData.append("graduationYear", values.graduationYear);
+            formData.append("enrollmentYear", values.enrollmentYear);
+            formData.append("age", values.age);
+            formData.append("gender", values.gender);
+            formData.append("phoneNumber", values.phoneNumber);
+            formData.append("bio", values.bio || "");
+
+            // Handle file upload correctly
+            if (values.profilePicture instanceof File) {
+              formData.append("profilePicture", values.profilePicture);
+            }
+
+            // Log the form data for debugging
+            for (let pair of formData.entries()) {
+              console.log(pair[0] + ": " + pair[1]);
+            }
+
+            // Call backend API that accepts FormData
+            response = await completeStudentProfile(formData);
+            console.log("Profile completed successfully:", response);
+          } else {
+            const formData = new FormData();
+            formData.append("companyName", values.companyName);
+            formData.append("industry", values.industry);
+            formData.append("governorate", values.governorate);
+            formData.append("taxId", values.taxId);
+            formData.append("city", values.city);
+            formData.append("street", values.street);
+            formData.append("logo", values.profilePicture);
+            // Log the form data for debugging
+            for (let pair of formData.entries()) {
+              console.log(pair[0] + ": " + pair[1]);
+            }
+            // Call company-specific endpoint
+            response = await completeCompanyProfile(formData);
+          }
+
+          if (response) {
+            Swal.fire({
+              icon: "success",
+              title: "Profile Completed!",
+              text: "Your profile has been successfully updated.",
+            });
+            navigate("/");
+          }
+        } catch (error) {
+          console.error("Submission error:", error);
+          let errorMessage = "Failed to complete profile.";
+
+          if (
+            error.response &&
+            error.response.data &&
+            error.response.data.errors
+          ) {
+            const errorData = error.response.data.errors;
+            const errorDetails = Object.entries(errorData)
+              .map(([field, msgs]) => `${field}: ${msgs.join(", ")}`)
+              .join("\n");
+
+            errorMessage = `Validation errors:\n${errorDetails}`;
+          }
+
           Swal.fire({
             icon: "error",
             title: "Error",
