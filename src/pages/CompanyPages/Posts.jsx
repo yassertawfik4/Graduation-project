@@ -52,7 +52,10 @@ function Posts() {
                   </h2>
                 </div>
               </Link>
-              <div className="cursor-pointer flex gap-4 w-[284px] items-center transition duration-300 ease-in-out border border-[transparent] hover:border-[#095544] rounded-[16px] p-4 shadow-lg">
+              <Link
+                to={`/post/addRoadmap`}
+                className="cursor-pointer flex gap-4 w-[284px] items-center transition duration-300 ease-in-out border border-[transparent] hover:border-[#095544] rounded-[16px] p-4 shadow-lg"
+              >
                 <div className="bg-[rgba(9,85,68,0.15)] rounded-full w-16 h-16 flex justify-center items-center">
                   <img className="" src={roadMapIcon} alt="roadMapIcon" />
                 </div>
@@ -61,7 +64,7 @@ function Posts() {
                     Roadmap
                   </h2>
                 </div>
-              </div>
+              </Link>
             </div>
           </div>
         </div>

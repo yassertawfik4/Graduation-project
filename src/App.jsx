@@ -14,6 +14,7 @@ import Applications from "./pages/CompanyPages/Applications";
 import Posts from "./pages/CompanyPages/Posts";
 import CreateInterShip from "./pages/CompanyPages/CompanyCreation/CreateInterShip";
 import CreateProject from "./pages/CompanyPages/CompanyCreation/CreateProject";
+import CreateRoadMap from "./pages/CompanyPages/CompanyCreation/CreateRoadMap";
 
 const HomePage = lazy(() => import("./pages/HomeContainer/HomePage"));
 const UserLoginPage = lazy(() => import("./pages/users/Login/UserLogin"));
@@ -72,6 +73,7 @@ function App() {
               <Route path="/Post" element={<Posts />} />
               <Route path="/post/addinternship" element={<CreateInterShip />} />
               <Route path="/post/addproject" element={<CreateProject />} />
+              <Route path="/post/addRoadmap" element={<CreateRoadMap />} />
             </>
           )}
         </Routes>

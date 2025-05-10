@@ -33,7 +33,7 @@ function Applications() {
   const handelDelete = async (id) => {
     const result = await Swal.fire({
       title: "Are you sure?",
-      text: "You won’t be able to revert this!",
+      text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
@@ -63,6 +63,80 @@ function Applications() {
       }
     }
   };
+  const handelAcceptApplication = async (id) => {
+    const result = await Swal.fire({
+      title: "Accept Application?",
+      text: "Are you sure you want to accept this application?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#095544",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, accept it!",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const response = await axiosInstance.post(
+          `Internship/AcceptApplication/${id}`,
+          {
+            feedbackNotes: "Accepted",
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem(
+                "accessUsertoken"
+              )}`,
+            },
+          }
+        );
+
+        console.log(response.data);
+        handelGetApplications();
+        Swal.fire("Accepted!", "The application has been accepted.", "success");
+      } catch (error) {
+        console.log(error);
+        Swal.fire("Error!", "Something went wrong.", "error");
+      }
+    }
+  };
+
+  const handelRejectApplication = async (id) => {
+    const result = await Swal.fire({
+      title: "Reject Application?",
+      text: "Are you sure you want to reject this application?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, reject it!",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const response = await axiosInstance.post(
+          `Internship/RejectApplication/${id}`,
+          {
+            feedbackNotes: "Rejected",
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem(
+                "accessUsertoken"
+              )}`,
+            },
+          }
+        );
+
+        console.log(response.data);
+        handelGetApplications();
+        Swal.fire("Rejected!", "The application has been rejected.", "success");
+      } catch (error) {
+        console.log(error);
+        Swal.fire("Error!", "Something went wrong.", "error");
+      }
+    }
+  };
+
   useEffect(() => {
     handelGetApplications();
   }, []);
@@ -119,6 +193,22 @@ function Applications() {
                       />
                       {activeMenuId === application.id && (
                         <div className="absolute right-0 mt-2 bg-white shadow-md rounded-md z-20 p-2 w-32">
+                          <button
+                            onClick={() =>
+                              handelAcceptApplication(application.id)
+                            }
+                            className="text-left flex items-center gap-2 cursor-pointer w-full px-3 py-2 text-sm hover:bg-gray-100 "
+                          >
+                            Accept
+                          </button>
+                          <button
+                            onClick={() =>
+                              handelRejectApplication(application.id)
+                            }
+                            className="text-left flex items-center gap-2 cursor-pointer w-full px-3 py-2 text-sm hover:bg-gray-100"
+                          >
+                            Reject
+                          </button>
                           <button className="text-left flex items-center gap-2 cursor-pointer w-full px-3 py-2 text-sm hover:bg-gray-100">
                             <GoPlusCircle size={20} /> Add
                           </button>
