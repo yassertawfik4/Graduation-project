@@ -2,13 +2,16 @@ import { useEffect, useState } from "react";
 import { CiBookmark } from "react-icons/ci";
 import { FaRegCirclePlay } from "react-icons/fa6";
 import { FiShare2 } from "react-icons/fi";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../../Api/axiosInstance";
 import { GoBook } from "react-icons/go";
 function RoadMapDetailes() {
   const [roadMap, setRoadMap] = useState(null);
   const { roadmapid } = useParams();
   const [checkedItems, setCheckedItems] = useState({}); // لحفظ الحالة لكل عنصر
+  const navigate = useNavigate();
+  const [isUrl, setIsUrl] = useState(false);
+  const [url, setUrl] = useState("");
   const handelGetRoadMapSections = async () => {
     try {
       const response = await axiosInstance.get(
@@ -30,8 +33,27 @@ function RoadMapDetailes() {
     }));
   };
 
+  const handleMakePayMent = async () => {
+    try {
+      const response = await axiosInstance.post(
+        `payments/initiate-roadmap-purchase/${roadmapid}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessUsertoken")}`,
+          },
+        }
+      );
+      console.log(response);
+      setIsUrl(true);
+      setUrl(response.data.checkoutUrl);
+      // navigate(response.data.checkoutUrl);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
-    <div>
+    <div className={`${roadMap?.sections?.length === 0 ? "h-screen" : ""}`}>
       <div className="container mx-auto px-3">
         <div className="my-6">
           <div className="flex justify-between items-center">
@@ -77,12 +99,14 @@ function RoadMapDetailes() {
           <div className="relative ">
             {/* Overlay to block interaction */}
             <div className="absolute inset-0 !opacity-100  z-10 pointer-events-auto flex items-center justify-center">
-              <button
-                onClick={() => alert("Upgrade to unlock full access")}
+              <Link
+                to={isUrl ? url : ""}
+                target="_blank"
+                onClick={() => handleMakePayMent()}
                 className="bg-[#095544] text-white px-8 py-4 cursor-pointer rounded-full text-xl hover:bg-[#073e34] transition"
               >
                 Unlock Premium Roadmap
-              </button>
+              </Link>
             </div>
 
             {/* Content is dimmed and non-interactive */}
