@@ -1,8 +1,10 @@
 import { useState } from "react";
 import axiosInstance from "../../../Api/axiosInstance";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 function CreateRoadMap() {
+  const navigate = useNavigate();
   const [roadmap, setRoadmap] = useState({
     title: "",
     description: "",
@@ -21,6 +23,9 @@ function CreateRoadMap() {
     if (!roadmap.technology.trim()) {
       newErrors.technology = "Technology is required";
     }
+    if (roadmap.isPremium && (!roadmap.price || roadmap.price <= 0)) {
+      newErrors.price = "يجب إدخال سعر صالح عند اختيار Premium";
+    }
     if (!roadmap.description.trim()) {
       newErrors.description = "Description is required";
     }
@@ -33,8 +38,28 @@ function CreateRoadMap() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setRoadmap({ ...roadmap, [name]: value });
-    // Clear error when user starts typing
+    let newValue = value;
+
+    if (name === "isPremium") {
+      newValue = value === "true";
+
+      // لو المستخدم رجعها false، نخلي السعر بصفر تلقائيًا
+      if (!newValue) {
+        setRoadmap((prev) => ({
+          ...prev,
+          [name]: newValue,
+          price: 0,
+        }));
+        return;
+      }
+    }
+
+    if (name === "price") {
+      newValue = parseFloat(value);
+    }
+
+    setRoadmap({ ...roadmap, [name]: newValue });
+
     if (errors[name]) {
       setErrors({ ...errors, [name]: "" });
     }
@@ -65,7 +90,9 @@ function CreateRoadMap() {
         title: "Success!",
         text: "Roadmap created successfully",
       });
+      console.log(response.data);
 
+      navigate(`/post/addRoadmap/${response.data}/addSectionRoadmap`);
       // Reset form after successful submission
       setRoadmap({
         title: "",
@@ -148,6 +175,27 @@ function CreateRoadMap() {
                   <span className="text-red-500 text-sm">
                     {errors.isPremium}
                   </span>
+                )}
+              </div>
+            </div>
+            <div className="flex items-center gap-4 w-full my-4">
+              <div className="flex flex-col gap-2 w-full">
+                <label>Price *</label>
+                <input
+                  className={`border ${
+                    errors.isPremium ? "border-red-500" : "border-[#F1F7F6]"
+                  } px-5 py-4 rounded-[8px] outline-none text-[#707D7D] ${
+                    roadmap.isPremium ? "" : "cursor-not-allowed"
+                  }`}
+                  name="price"
+                  type="number"
+                  disabled={!roadmap.isPremium}
+                  value={roadmap.price}
+                  onChange={handleChange}
+                  placeholder="Add price"
+                />
+                {errors.price && (
+                  <span className="text-red-500 text-sm">{errors.price}</span>
                 )}
               </div>
             </div>

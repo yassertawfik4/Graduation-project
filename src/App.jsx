@@ -15,6 +15,8 @@ import Posts from "./pages/CompanyPages/Posts";
 import CreateInterShip from "./pages/CompanyPages/CompanyCreation/CreateInterShip";
 import CreateProject from "./pages/CompanyPages/CompanyCreation/CreateProject";
 import CreateRoadMap from "./pages/CompanyPages/CompanyCreation/CreateRoadMap";
+import CreateSectionRoadMap from "./pages/CompanyPages/CompanyCreation/CreateSectionRoadMap";
+import Alerts from "./pages/Alert/Alerts";
 
 const HomePage = lazy(() => import("./pages/HomeContainer/HomePage"));
 const UserLoginPage = lazy(() => import("./pages/users/Login/UserLogin"));
@@ -74,6 +76,11 @@ function App() {
               <Route path="/post/addinternship" element={<CreateInterShip />} />
               <Route path="/post/addproject" element={<CreateProject />} />
               <Route path="/post/addRoadmap" element={<CreateRoadMap />} />
+              <Route
+                path="/post/addRoadmap/:roadMapId/addSectionRoadmap"
+                element={<CreateSectionRoadMap />}
+              />
+              <Route path="/Alerts" element={<Alerts />} />
             </>
           )}
         </Routes>

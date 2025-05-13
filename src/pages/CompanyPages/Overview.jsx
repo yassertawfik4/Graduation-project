@@ -3,10 +3,12 @@ import companyApplication from "/public/images/companyApplication.png";
 import { GoPlusCircle } from "react-icons/go";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../Api/axiosInstance";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
 import overview from "/public/images/overview.png";
 import Swal from "sweetalert2";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { AiOutlineEdit } from "react-icons/ai";
 const POSTS_PER_PAGE = 10;
 
 function Overview() {
@@ -14,6 +16,7 @@ function Overview() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const handelDeletePost = async (id) => {
     try {
       await axiosInstance.delete(`Internship/DeleteInternship/${id}`, {
@@ -122,7 +125,6 @@ function Overview() {
                     DAYS REMAINING
                   </th>
                   <th className="px-3 py-2 whitespace-nowrap">ACTIONS</th>
-                  <th className="px-3 py-2 whitespace-nowrap">Delete</th>
                 </tr>
               </thead>
               <tbody>
@@ -144,15 +146,14 @@ function Overview() {
                       <td className="px-3 py-6 whitespace-nowrap text-[#707D7D]">
                         {post.daysRemaining}
                       </td>
-                      <td className="px-3 py-6 whitespace-nowrap">
+                      <td className="px-3 py-6 whitespace-nowrap flex items-center gap-5">
                         <Link
                           to={`/internShip/${post.id}/application`}
-                          className="bg-[#095544] px-4 py-3 flex justify-center w-fit items-center gap-2 text-white cursor-pointer text-[18px] font-medium rounded-[8px]"
+                          className="bg-[#095544] px-4 py-3 flex justify-center w-fit items-center gap-2 text-white cursor-pointer text-[16px] font-medium rounded-[8px]"
                         >
                           View Applications
                         </Link>
-                      </td>
-                      <td className="px-3 py-6 whitespace-nowrap text-[#707D7D]">
+                       
                         <button
                           onClick={() => {
                             Swal.fire({
@@ -169,9 +170,9 @@ function Overview() {
                               }
                             });
                           }}
-                          className="bg-[#095544] px-4 py-3 flex justify-center w-fit items-center gap-2 text-white cursor-pointer text-[18px] font-medium rounded-[8px]"
+                          className="text-red-700 flex justify-center w-fit items-center gap-2 cursor-pointer text-[18px] font-medium rounded-[8px]"
                         >
-                          Delete
+                          <RiDeleteBin6Line size={25} />
                         </button>
                       </td>
                     </tr>

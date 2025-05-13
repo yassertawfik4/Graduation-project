@@ -1,10 +1,13 @@
 import Swal from "sweetalert2";
 import axiosInstance from "../../../Api/axiosInstance";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 function CreateProject() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const editId = searchParams.get("edit");
+  console.log(editId);
   const [internShip, setInternShip] = useState({
     title: "",
     about: "",
@@ -94,7 +97,6 @@ function CreateProject() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate all fields before submission
     if (!validateAllFields()) {
       Swal.fire({
         icon: "error",
@@ -111,34 +113,68 @@ function CreateProject() {
       applicationDeadline: formatDateToISO(internShip.applicationDeadline),
     };
 
-    console.log(formattedData);
-
     try {
-      const response = await axiosInstance.post(
-        `Internship/CreateInternship`,
-        formattedData,
+      if (editId) {
+        await axiosInstance.put(
+          `Internship/UpdateInternship/${editId}`,
+          formattedData,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem(
+                "accessUsertoken"
+              )}`,
+            },
+          }
+        );
+        Swal.fire({
+          icon: "success",
+          title: "Updated!",
+          text: "Internship updated successfully.",
+        });
+      } else {
+        await axiosInstance.post(`Internship/CreateInternship`, formattedData, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessUsertoken")}`,
+          },
+        });
+        Swal.fire({
+          icon: "success",
+          title: "Created!",
+          text: "Internship created successfully.",
+        });
+      }
+
+      navigate("/Post");
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error.response?.data?.message || "Something went wrong.",
+      });
+    }
+  };
+
+  const handelEditProject = async () => {
+    try {
+      await axiosInstance.put(
+        `Internship/UpdateInternship/${editId}`,
+        internShip,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessUsertoken")}`,
           },
         }
       );
-      console.log(response.data);
-      Swal.fire({
-        icon: "success",
-        title: "Success!",
-        text: "Internship created successfully.",
-      });
     } catch (error) {
       console.log(error);
-      Swal.fire({
-        icon: "error",
-        title: "Failed",
-        text: error.response?.data?.message || "Failed to create internship.",
-      });
     }
   };
-
+  useEffect(() => {
+    if (editId) {
+      handelEditProject();
+    }
+  }, [editId]);
   const errorStyle = {
     color: "red",
     fontSize: "16px",
@@ -184,7 +220,7 @@ function CreateProject() {
                   <option value="" disabled>
                     Select Type
                   </option>
-                  <option value="Traditional">InternShip</option>
+                  <option value="ProjectBased">Project Based</option>
                 </select>
                 {errors.type && <p style={errorStyle}>{errors.type}</p>}
               </div>
