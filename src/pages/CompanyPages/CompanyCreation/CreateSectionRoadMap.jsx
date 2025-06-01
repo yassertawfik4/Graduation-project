@@ -17,6 +17,7 @@ function CreateSectionRoadMap() {
         resources: [
           {
             title: "",
+            description: "",
             url: "",
             type: "",
           },
@@ -243,6 +244,30 @@ function CreateSectionRoadMap() {
                         placeholder="Enter Item Title"
                         required
                       />
+                    </div>
+                    <div className="w-full">
+                      <label>Description</label>
+                      <textarea
+                        name="description"
+                        value={item.description}
+                        className="w-full border border-[#F1F7F6] rounded-[8px] px-5 py-4 outline-none text-[#707D7D]"
+                        onChange={(e) => handleChange(e, itemIndex)}
+                        placeholder="Enter Item Description"
+                      />
+                    </div>
+                    <div className="my-4">
+                      <select
+                        name="type"
+                        value={item.type}
+                        className="w-full border border-[#F1F7F6] rounded-[8px] px-5 py-4 outline-none text-[#707D7D]"
+                        required
+                        onChange={(e) => handleChange(e, itemIndex)}
+                      >
+                        <option value="">Select Type</option>
+                        <option value="Documentation">Documentation</option>
+                        <option value="Article">Article</option>
+                        <option value="vVideoideo">Video</option>
+                      </select>
                     </div>
                   </div>
 

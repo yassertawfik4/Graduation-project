@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import SideNav from "../StudentProfilePage/sideNav/SideNav";
 import CompanyProfileHeader from "./CompanyProfileHeader";
 import axiosInstance from "../../Api/axiosInstance";
-import { useParams } from "react-router-dom";
 import CompanyPosts from "./CompanyPosts";
 import CompanyFounding from "./CompanyFounding";
 import CompanyContact from "./CompanyContact";
 function CompanyProfile() {
   const [company, setCompany] = useState({});
+  
   // const { companyid } = useParams();
   const handleGetCompany = async () => {
     try {

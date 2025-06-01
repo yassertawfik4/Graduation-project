@@ -61,9 +61,9 @@ function Faq() {
             <h2 className="font-[roboto] xl:text-[55px] md:text-[50px] text-[40px] tracking-[1.79px] font-bold text-[#010318]">
               Frequently Asked Questions
             </h2>
-            <div className="bg-[rgba(1,3,24,0.63)] w-[311px] hidden xl:block py-4 px-4 rounded-lg">
+            <div className="bg-[#021B1A] w-[311px] hidden xl:block py-4 px-4 rounded-lg">
               <p className="text-[#F3F3F3] font-[roboto] text-[32px] tracking-[-0.25px] font-bold">
-                Step<span className="text-[#010318]">Up</span>
+                Step<span className="text-[#095544]">Up</span>
               </p>
               <div className="flex justify-between items-center mt-3">
                 {soicalIcons.map((icon, index) => (

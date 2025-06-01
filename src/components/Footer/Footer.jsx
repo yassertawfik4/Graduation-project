@@ -32,7 +32,7 @@ function Footer() {
     },
   ];
   return (
-    <footer className="bg-[#010318] rounded-t-2xl">
+    <footer className="bg-[#021B1A] rounded-t-2xl">
       <div className="container mx-auto px-2">
         <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-4 gap-8 md:gap-24 py-10">
           {/* Logo and Social Icons - Full width on tablet */}

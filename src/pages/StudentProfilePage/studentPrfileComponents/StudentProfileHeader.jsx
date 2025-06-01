@@ -157,7 +157,7 @@ function StudentProfileHeader({ data, handleGetProfile }) {
                 onClick={handleImageClick}
               >
                 <img
-                  src={studentprofile}
+                  src={profileImage}
                   alt="Profile"
                   className="w-full h-full object-cover"
                 />
@@ -338,7 +338,7 @@ function StudentProfileHeader({ data, handleGetProfile }) {
             >
               <img
                 src={
-                  studentprofile || studentprofile // ← ضع هنا مسار الصورة البديلة
+                  profileImage || studentprofile // ← ضع هنا مسار الصورة البديلة
                 }
                 alt="Profile"
                 className="w-[160px] h-[160px] rounded-full object-cover"

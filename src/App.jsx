@@ -17,6 +17,7 @@ import CreateProject from "./pages/CompanyPages/CompanyCreation/CreateProject";
 import CreateRoadMap from "./pages/CompanyPages/CompanyCreation/CreateRoadMap";
 import CreateSectionRoadMap from "./pages/CompanyPages/CompanyCreation/CreateSectionRoadMap";
 import Alerts from "./pages/Alert/Alerts";
+import NotFound from "./pages/NotFound/NotFound";
 
 const HomePage = lazy(() => import("./pages/HomeContainer/HomePage"));
 const UserLoginPage = lazy(() => import("./pages/users/Login/UserLogin"));
@@ -52,6 +53,7 @@ function App() {
       <Suspense fallback={<Loaderpage />}>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="*" element={<NotFound />} />
           <Route path="/user">
             <Route path="login" element={<UserLoginPage />} />
             <Route path="register" element={<UserRegisterPage />} />
@@ -65,6 +67,7 @@ function App() {
 
           <Route path="/Roadmaps" element={<RoadMap />} />
           <Route path="/roadmap/:roadmapid" element={<RoadMapDetailes />} />
+          <Route path="/Alerts" element={<Alerts />} />
           {isCompany && (
             <>
               <Route path="/Overview" element={<Overview />} />
@@ -80,7 +83,6 @@ function App() {
                 path="/post/addRoadmap/:roadMapId/addSectionRoadmap"
                 element={<CreateSectionRoadMap />}
               />
-              <Route path="/Alerts" element={<Alerts />} />
             </>
           )}
         </Routes>

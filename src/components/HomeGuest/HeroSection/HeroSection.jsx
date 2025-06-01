@@ -16,7 +16,7 @@ function HeroSection() {
         <div className="flex md:justify-between justify-center items-center flex-wrap md:flex-nowrap  ">
           <div data-aos="fade-right" className="">
             <h1 className="xl:text-[50px] md:text-[34px] sm:text-[40px] text-[29px] tracking-[3.75px] font-[rubik] font-bold text-[#010318]">
-              Welcome to <br /> Step<span className="text-[#3A4C59]">Up</span>{" "}
+              Welcome to <br /> Step<span className="text-[#095544]">Up</span>{" "}
               community
             </h1>
             <p className="font-[roboto] md:text-[18px] text-[15px] my-4 font-medium">

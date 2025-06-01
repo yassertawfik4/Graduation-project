@@ -257,16 +257,7 @@ function StudentSkills({ data }) {
         ) : (
           <div className="text-center py-8 w-full">
             <p className="text-[#8D9499] mb-4">No skills added yet.</p>
-            {isCompany !== "Company" && (
-              <button
-                onClick={() => setShowModal(true)}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-[#3A4C59] text-white rounded-md hover:bg-opacity-90"
-                disabled={loading}
-              >
-                <FaPlus size={14} />
-                Add Your First Skill
-              </button>
-            )}
+            
           </div>
         )}
       </div>

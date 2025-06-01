@@ -33,7 +33,7 @@ function AboutCompany() {
               <li>Collaborate with students on real projects.</li>
             </ul>
             <div className="py-5">
-              <button className="border-2 xl:text-[24px] md:text-[20px] text-[18px] font-[roboto] cursor-pointer transition ease-in-out duration-200 hover:bg-white hover:text-[#3A4C59] border-[#3A4C59] font-medium bg-[#3A4C59] text-white py-1 px-4 rounded-lg">
+              <button className="border-2 xl:text-[24px] md:text-[20px] text-[18px] font-[roboto] cursor-pointer transition ease-in-out duration-200 hover:bg-white hover:text-[#095544] border-[#095544] font-medium bg-[#095544] text-white py-1 px-4 rounded-lg">
                 Join Now
               </button>
             </div>

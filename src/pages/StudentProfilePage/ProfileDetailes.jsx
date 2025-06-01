@@ -55,7 +55,7 @@ function ProfileDetailes() {
           <StudentSkills data={myProfile} />
 
           {/* CV/Resume Section */}
-          <StudentResume data={myProfile} />
+          <StudentResume data={myProfile} handleGetProfile={handleGetProfile} />
 
           {/* Experiences Section */}
           <StudentExperiences data={myProfile} />

@@ -385,15 +385,7 @@ function StudentExperiences({ data }) {
           ) : (
             <div className="text-center py-8">
               <p className="text-[#3A4C59] mb-4">No experiences added yet.</p>
-              {isCompany !== "Company" && (
-                <button
-                  onClick={handleAddNewExperience}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#3A4C59] text-white rounded-md hover:bg-opacity-90"
-                >
-                  <FaPlus size={14} />
-                  Add Your First Experience
-                </button>
-              )}
+              
             </div>
           )}
         </div>

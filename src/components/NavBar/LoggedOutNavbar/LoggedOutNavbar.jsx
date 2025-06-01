@@ -26,13 +26,13 @@ function LoggedOutNavbar() {
             <div className="flex items-center gap-4">
               <NavLink
                 to="/user/login"
-                className="border border-[#3A4C59] text-[#3A4C59] md:text-[17px] text-[13px] font-medium py-2 md:px-6 px-3 rounded-lg hover:bg-[#F3F3F3] transition duration-200"
+                className="border border-[#095544] text-[#095544] md:text-[17px] text-[13px] font-medium py-2 md:px-6 px-3 rounded-lg hover:bg-[#F3F3F3] transition duration-200"
               >
                 Login
               </NavLink>
               <NavLink
                 to="/user/register"
-                className="bg-[#3A4C59] text-white font-medium py-2 md:px-6 px-3 md:text-[17px] text-[13px] rounded-lg hover:bg-opacity-90 transition duration-200"
+                className="bg-[#095544] text-white font-medium py-2 md:px-6 px-3 md:text-[17px] text-[13px] rounded-lg hover:bg-opacity-90 transition duration-200"
               >
                 Sign up
               </NavLink>

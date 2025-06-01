@@ -10,7 +10,7 @@ import {
 import axiosInstance from "../../../Api/axiosInstance";
 import Swal from "sweetalert2";
 
-function StudentResume({ data }) {
+function StudentResume({ data, handleGetProfile }) {
   const [isAdding, setIsAdding] = useState(false);
   const [newFile, setNewFile] = useState(null);
   const [resumeUrl, setResumeUrl] = useState([]); // ✅
@@ -36,7 +36,7 @@ function StudentResume({ data }) {
           },
         }
       );
-
+      handleGetProfile();
       Swal.fire("Success", "Resume uploaded successfully", "success");
 
       // لو الاستجابة ترجع الرابط أو البيانات المرفوعة
