@@ -12,9 +12,9 @@ import {
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import internShip from '../../../public/images/internShipLogo.png'
 
 // Placeholder company logo
-const DUMMY_LOGO_URL = "https://via.placeholder.com/80"; // Replace with actual logo logic later
 
 function InternDetails() {
   const { id } = useParams();
@@ -27,6 +27,44 @@ function InternDetails() {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [bookmarkLoading, setBookmarkLoading] = useState(false);
   const studentId = localStorage.getItem("studentId");
+
+
+    const generateResume=async()=>{
+      try {
+        setLoading(true);
+        setError(null);
+        const response=await axiosInstance.get(`Resumes/generate`,{
+          internshipId:id,
+          
+        },{
+          headers:{
+            Authorization:`Bearer ${localStorage.getItem("accessUsertoken")}`,
+          },
+        })
+        Swal.fire({
+          icon: "success",
+          title: "Resume Generated",
+          text: "Your resume has been generated successfully",
+          timer: 2000,
+          timerProgressBar: true,
+          confirmButtonColor: "#3A4C59",
+        })
+        console.log(response.data)
+      } catch (error) {
+        console.log(error)
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Failed to generate resume",
+          timer: 2000,
+          timerProgressBar: true,
+          confirmButtonColor: "#3A4C59",
+        })
+      }finally{
+        setLoading(false)
+      }
+    }
+
   useEffect(() => {
     const fetchInternDetails = async () => {
       setLoading(true);
@@ -247,7 +285,6 @@ function InternDetails() {
     : "Not specified";
   const workingModel = internDetails.workingModel || "Not specified";
 
-  const companyLogoUrl = DUMMY_LOGO_URL;
 
   return (
     <div className="min-h-screen bg-[rgba(112,125,125,0.6)]  flex flex-col items-center justify-start py-8 px-4 md:px-8">
@@ -284,11 +321,11 @@ function InternDetails() {
       {/* Main Card Container */}
       <div className="relative bg-white rounded-2xl shadow-xl max-w-4xl w-full px-8 pt-16 pb-8">
         {/* Logo */}
-        <div className="absolute left-1/2 -top-12 transform -translate-x-1/2">
+        <div className="absolute left-1/2 -top-12 transform -translate-x-1/2 w-28 h-28">
           <img
-            src={companyLogoUrl}
+            src={internShip}
             alt="Company Logo"
-            className="w-24 h-24 rounded-full border-4 border-white shadow-lg bg-gray-100 object-cover"
+            className="w-full h-full object-contain rounded-full border-4 border-white shadow-lg bg-gray-100 "
           />
         </div>
 
@@ -309,7 +346,7 @@ function InternDetails() {
         </div>
 
         {/* Info Tags */}
-        <div className="flex justify-between gap-4 mt-6">
+        <div className="flex justify-between gap-2 mt-6">
           {/* Working Model */}
           <div className="w-[200px] h-[55px] bg-emerald-950 text-white rounded-[8px] px-2 py-1 flex items-center gap-2">
             <FaMapMarkerAlt className="text-xl flex-shrink-0" />
@@ -332,10 +369,10 @@ function InternDetails() {
 
           {/* Salary */}
           <div className="w-[200px] h-[55px] bg-emerald-950 text-white rounded-[8px] px-2 py-1 flex items-center gap-2">
-            <FaWallet className="text-xl flex-shrink-0" />
-            <div className="flex flex-col">
-              <span className="text-xs">Salary (monthly)</span>
-              <span className="text-sm font-semibold">{salary}</span>
+            <FaWallet className="md:text-xl text-[14px] flex-shrink-0" />
+            <div className="flex flex-col w-full">
+              <span className="md:text-xs text-[10px]">Salary (monthly)</span>
+              <span className="md:text-sm text-[10px] font-semibold">{salary}</span>
             </div>
           </div>
         </div>
@@ -469,7 +506,13 @@ function InternDetails() {
         </div>
 
         {/* Apply Button */}
-        <div className="mt-8 flex justify-center">
+        <div className="mt-8 flex justify-center gap-4">
+          <button
+            onClick={() => generateResume()}
+            className="border border-emerald-950 cursor-pointer text-emerald-950 font-bold md:text-[16px] text-[12px] py-3 md:px-12 px-6 rounded-lg shadow transition"
+          >
+          Generate Resume
+          </button>
           <button
             onClick={() => {
               if (studentData.resumeUrl && studentData.resumeUrl !== "") {
@@ -482,10 +525,11 @@ function InternDetails() {
                 });
               }
             }}
-            className="bg-emerald-950 cursor-pointer text-white font-bold py-3 px-12 rounded-lg shadow transition"
+            className="bg-emerald-950 cursor-pointer text-white font-bold py-3 md:px-12 px-6 md:text-[16px] text-[12px] rounded-lg shadow transition"
           >
             Apply Now
           </button>
+        
         </div>
       </div>
     </div>

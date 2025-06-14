@@ -1,8 +1,7 @@
 import { CiCamera } from "react-icons/ci";
 import companyLogo from "/public/images/profileImage.png";
-import { FaGithub, FaLinkedin, FaPen } from "react-icons/fa";
-import { IoIosLink } from "react-icons/io";
-import { useState, useRef, useEffect } from "react";
+import { FaPen } from "react-icons/fa";
+import { useState, useRef, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import axiosInstance from "../../Api/axiosInstance";
 import Swal from "sweetalert2";
@@ -10,6 +9,7 @@ import Swal from "sweetalert2";
 function CompanyProfileHeader({ company, handleGetCompany }) {
   const [isEditing, setIsEditing] = useState(false);
 
+  const companyid = localStorage.getItem("companyId");
   const [about, setAbout] = useState({
     name: "",
     description: "",
@@ -17,7 +17,8 @@ function CompanyProfileHeader({ company, handleGetCompany }) {
     size: "",
     websiteUrl: "",
   });
-  const [profileImage, setProfileImage] = useState(companyLogo);
+  const [profileImage, setProfileImage] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef(null);
 
   const handleOnChange = (e) => {
@@ -30,7 +31,7 @@ function CompanyProfileHeader({ company, handleGetCompany }) {
     setIsEditing(false);
     handelEdit();
   };
-  const handelGetAbout = async () => {
+  const handelGetAbout = useCallback(async () => {
     try {
       const response = await axiosInstance.get(`Company/profiles/info`, {
         headers: {
@@ -42,7 +43,7 @@ function CompanyProfileHeader({ company, handleGetCompany }) {
     } catch (error) {
       console.log(error);
     }
-  };
+  }, []);
   const handelEdit = async () => {
     try {
       const response = await axiosInstance.patch(
@@ -64,9 +65,73 @@ function CompanyProfileHeader({ company, handleGetCompany }) {
       console.log(error);
     }
   };
+  // handel get photo
+  const handelGetPhoto = useCallback(async () => {
+    try {
+      const response = await axiosInstance.get(`Company/company-logo/${companyid}`,
+        {
+          responseType: 'blob',
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessUsertoken")}`,
+          }
+      })
+      console.log(response);
+      const imageUrl = URL.createObjectURL(response.data);
+      setProfileImage(imageUrl);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [companyid]);
+  
+  // Handle image click to open file selector
+  const handleImageClick = () => {
+    fileInputRef.current.click();
+  }
+  
+  // Handle image upload
+  const handleImageChange = async (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      
+      // Create a preview of the selected image
+      const previewUrl = URL.createObjectURL(file);
+      setProfileImage(previewUrl);
+      
+      // Upload the image to the server
+      try {
+        setIsUploading(true);
+        
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        const response = await axiosInstance.post(
+          'Company/upload-logo',
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("accessUsertoken")}`,
+            }
+          }
+        );
+        
+        const imageUrl = response.data; 
+        setProfileImage(imageUrl); 
+        console.log('Image upload response:', response);
+        Swal.fire("Updated!", "Company logo has been updated.", "success");
+        handleGetCompany();
+        
+      } catch (error) {
+        console.error('Error uploading image:', error);
+        Swal.fire("Error!", "Failed to upload company logo.", "error");
+      } finally {
+        setIsUploading(false);
+      }
+    }
+  }
   useEffect(() => {
     handelGetAbout();
-  }, []);
+    handelGetPhoto();
+  }, [handelGetAbout, handelGetPhoto]);
 
   return (
     <div className="bg-white shadow rounded-lg p-6">
@@ -82,21 +147,27 @@ function CompanyProfileHeader({ company, handleGetCompany }) {
             <div className="flex items-center justify-between">
               <div
                 className="w-40 h-40 relative bottom-10 rounded-full border-4 border-white shadow-lg overflow-hidden cursor-pointer"
-                onClick={"handleImageClick"}
+                onClick={handleImageClick}
               >
                 <img
                   src={profileImage}
                   alt="Company Logo"
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute bottom-2 right-2 bg-white p-2 rounded-full shadow-md">
-                  <CiCamera size={20} className="text-gray-600" />
-                </div>
+                {isUploading ? (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  </div>
+                ) : (
+                  <div className="absolute bottom-2 right-2 bg-white p-2 rounded-full shadow-md">
+                    <CiCamera size={20} className="text-gray-600" />
+                  </div>
+                )}
                 <input
                   type="file"
                   ref={fileInputRef}
                   accept="image/*"
-                  onChange={"handleImageChange"}
+                  onChange={handleImageChange}
                   className="hidden"
                 />
               </div>
@@ -142,21 +213,27 @@ function CompanyProfileHeader({ company, handleGetCompany }) {
           <div className="flex items-center justify-between">
             <div
               className="w-40 h-40 relative bottom-10 rounded-full border-4 border-white shadow-lg overflow-hidden flex-shrink-0 cursor-pointer"
-              onClick={"handleImageClick"}
+              onClick={handleImageClick}
             >
               <img
-                src={company?.logo}
+                src={profileImage || company?.logo || companyLogo}
                 alt="Company Logo"
                 className="w-full h-full object-cover"
               />
-              <div className="absolute bottom-4 right-4 bg-white p-2 rounded-full shadow-md">
-                <CiCamera size={20} className="text-gray-600" />
-              </div>
+              {isUploading ? (
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                  <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              ) : (
+                <div className="absolute bottom-4 right-4 bg-white p-2 rounded-full shadow-md">
+                  <CiCamera size={20} className="text-gray-600" />
+                </div>
+              )}
               <input
                 type="file"
                 ref={fileInputRef}
                 accept="image/*"
-                onChange={"handleImageChange"}
+                onChange={handleImageChange}
                 className="hidden"
               />
             </div>
@@ -227,6 +304,11 @@ CompanyProfileHeader.propTypes = {
       companyName: PropTypes.string,
       industry: PropTypes.string,
     }),
+    info: PropTypes.shape({
+      name: PropTypes.string,
+      description: PropTypes.string
+    }),
+    logo: PropTypes.string,
     tagline: PropTypes.string,
     address: PropTypes.shape({
       street: PropTypes.string,
@@ -234,6 +316,7 @@ CompanyProfileHeader.propTypes = {
       governorate: PropTypes.string,
     }),
   }),
+  handleGetCompany: PropTypes.func.isRequired
 };
 
 export default CompanyProfileHeader;

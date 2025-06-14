@@ -75,11 +75,15 @@ function IntetnshipHome({ recommendedInternship }) {
               },
             }}
           >
-            {recommendedInternship?.internships?.map((item) => (
+          {recommendedInternship?.internships?.length > 0 ? (
+            recommendedInternship?.internships?.map((item) => (
               <SwiperSlide key={item.id}>
                 <RecommendedInternshipcard item={item} />
               </SwiperSlide>
-            ))}
+            ))
+          ) : (
+            <p className="text-[#000000] flex items-center gap-2 font-[rubik] font-medium text-[17px]">No internships available.</p>
+          )}
           </Swiper>
         </div>
       </div>

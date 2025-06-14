@@ -43,7 +43,7 @@ function HomePage() {
         <meta property="og:title" content="Home Page" />
         <meta property="og:description" content="Welcome to the best website" />
       </Helmet>
-      <main>
+      <main className="">
         {isLoggedIn ? (
           <>
             <HeroSectionUser />

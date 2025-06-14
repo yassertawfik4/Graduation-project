@@ -3,11 +3,21 @@ import { useParams } from "react-router-dom";
 import axiosInstance from "../../../Api/axiosInstance";
 import Swal from "sweetalert2";
 import { HiMiniXMark } from "react-icons/hi2";
+import SectionInfo from "./SectionInfo";
+import CreateQuiz from "../../../components/Quiz/CreateQuiz";
 
 function CreateSectionRoadMap() {
   const { roadMapId } = useParams();
   const [roadMapSections, setRoadMapSections] = useState([]);
-  console.log("roadMapSections", roadMapSections);
+  const [lastSectionId, setLastSectionId] = useState(null);
+
+
+  const [roadMapSectionId, setRoadMapSectionId] = useState(roadMapId);
+  console.log("roadMapSectionId", roadMapSectionId);
+  console.log("lastSectionId", lastSectionId);
+  // console.log("roadMapSections", roadMapSections);
+  const [isCreate, setIsCreate] = useState(false);
+  const [addQuiz ,setAddQuiz] = useState(false);
   const [section, setSection] = useState({
     sectionTitle: "",
     sectionOrder: 1,
@@ -17,7 +27,6 @@ function CreateSectionRoadMap() {
         resources: [
           {
             title: "",
-            description: "",
             url: "",
             type: "",
           },
@@ -26,7 +35,12 @@ function CreateSectionRoadMap() {
       },
     ],
   });
-
+  useEffect(() => {
+    if (roadMapSections?.sections?.length > 0) {
+      const lastId = roadMapSections.sections[roadMapSections.sections.length - 1].id;
+      setLastSectionId(lastId);
+    }
+  }, [roadMapSections]);
   const handelGetRoadMap = async () => {
     try {
       const response = await axiosInstance.get(
@@ -38,6 +52,7 @@ function CreateSectionRoadMap() {
         }
       );
       setRoadMapSections(response.data);
+      console.log(response.data)
       // Set the section order based on existing sections
       if (response.data.sections && response.data.sections.length > 0) {
         const maxOrder = Math.max(
@@ -98,7 +113,9 @@ function CreateSectionRoadMap() {
           },
         }
       );
+
       handelGetRoadMap();
+
       // Show success message
       await Swal.fire({
         icon: "success",
@@ -106,11 +123,12 @@ function CreateSectionRoadMap() {
         text: "Section created successfully",
         confirmButtonColor: "#021B1A",
       });
+      setIsCreate(true);
 
       // Reset form after successful submission
       setSection({
         sectionTitle: "",
-        sectionOrder: 1,
+        sectionOrder: section.sectionOrder + 1,
         items: [
           {
             title: "",
@@ -141,8 +159,6 @@ function CreateSectionRoadMap() {
   const addNewItem = () => {
     const newItem = {
       title: "",
-      description: "",
-      type: "",
       resources: [
         {
           title: "",
@@ -188,10 +204,14 @@ function CreateSectionRoadMap() {
     handelGetRoadMap();
   }, []);
   return (
-    <div className="my-5">
+    <div className="my-5 relative">
       <div className="container mx-auto px-3 flex justify-center">
         <div className="w-[70%] shadow-lg py-10 px-12 border-b-8 border-l-8 border-[#095544] rounded-[24px]">
           <h2 className="text-[24px] text-[#021B1A] font-medium mb-6">
+            <span className="bg-[#095544] w-fit px-5 py-0.5 rounded-[24px] text-white font-medium text-[22px] border-5 border-[#AACBC4]">
+              {section.sectionOrder}
+            </span>
+            <br />
             Add Section
           </h2>
           <form onSubmit={handleSubmit}>
@@ -244,30 +264,6 @@ function CreateSectionRoadMap() {
                         placeholder="Enter Item Title"
                         required
                       />
-                    </div>
-                    <div className="w-full">
-                      <label>Description</label>
-                      <textarea
-                        name="description"
-                        value={item.description}
-                        className="w-full border border-[#F1F7F6] rounded-[8px] px-5 py-4 outline-none text-[#707D7D]"
-                        onChange={(e) => handleChange(e, itemIndex)}
-                        placeholder="Enter Item Description"
-                      />
-                    </div>
-                    <div className="my-4">
-                      <select
-                        name="type"
-                        value={item.type}
-                        className="w-full border border-[#F1F7F6] rounded-[8px] px-5 py-4 outline-none text-[#707D7D]"
-                        required
-                        onChange={(e) => handleChange(e, itemIndex)}
-                      >
-                        <option value="">Select Type</option>
-                        <option value="Documentation">Documentation</option>
-                        <option value="Article">Article</option>
-                        <option value="vVideoideo">Video</option>
-                      </select>
                     </div>
                   </div>
 
@@ -373,6 +369,16 @@ function CreateSectionRoadMap() {
           </form>
         </div>
       </div>
+      {isCreate && (
+        <div className="absolute w-full max-h-screen h-screen overflow-auto bg-white z-40 top-0 px-20 py-5">
+          <SectionInfo setAddQuiz={setAddQuiz} setIsCreate={setIsCreate} />
+        </div>
+      )}
+      {addQuiz && (
+        <div className="absolute w-full h-fit bg-white z-10 top-0 px-20 py-5">
+          <CreateQuiz lastSectionId={lastSectionId} roadMapId={roadMapSectionId} setAddQuiz={setAddQuiz} />
+        </div>
+      )}
     </div>
   );
 }

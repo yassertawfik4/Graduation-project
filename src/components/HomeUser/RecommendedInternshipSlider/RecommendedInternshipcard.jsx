@@ -114,19 +114,19 @@ function RecommendedInternshipcard({ item }) {
           </div>
         </div>
         <div className="flex gap-2">
-          <button className="bg-[#3A4C59] flex items-center font-semibold rounded-lg gap-2 opacity-85 text-white px-3 py-2">
-            <span>
+          <button className="bg-[#3A4C59] flex items-center text-[13px] lg:font-semibold rounded-lg gap-2 opacity-85 text-white px-3 py-2 ">
+            <span className="lg:block hidden">
               <CiClock2 size={20} />
             </span>
             Full Time
           </button>
-          <button className="bg-[#3A4C59] flex items-center font-semibold rounded-lg gap-2 opacity-85 text-white px-3 py-2">
-            <span>
+          <button className="bg-[#3A4C59] flex items-center text-[13px] lg:font-semibold rounded-lg gap-2 opacity-85 text-white px-3 py-2">
+            <span className="lg:block hidden">
               <FaLocationDot size={20} />
             </span>
             {item.workingModel || item.projectType}
           </button>
-          <button className="bg-[#3A4C59] flex items-center font-semibold rounded-lg gap-2 opacity-85 text-white px-3 py-2">
+          <button className="bg-[#3A4C59] flex items-center text-[13px] lg:font-semibold rounded-lg gap-2 opacity-85 text-white px-3 py-2 ">
             {item.type || item.technologies}
           </button>
         </div>

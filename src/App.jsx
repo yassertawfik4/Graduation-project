@@ -18,6 +18,8 @@ import CreateRoadMap from "./pages/CompanyPages/CompanyCreation/CreateRoadMap";
 import CreateSectionRoadMap from "./pages/CompanyPages/CompanyCreation/CreateSectionRoadMap";
 import Alerts from "./pages/Alert/Alerts";
 import NotFound from "./pages/NotFound/NotFound";
+import CreateQuiz from "./components/Quiz/CreateQuiz";
+import RoadMapVeiwAll from "./pages/RoadMap/RoadMapVeiwAll";
 
 const HomePage = lazy(() => import("./pages/HomeContainer/HomePage"));
 const UserLoginPage = lazy(() => import("./pages/users/Login/UserLogin"));
@@ -67,6 +69,8 @@ function App() {
 
           <Route path="/Roadmaps" element={<RoadMap />} />
           <Route path="/roadmap/:roadmapid" element={<RoadMapDetailes />} />
+          <Route path="/roadmap/RoadMapVeiwAll" element={<RoadMapVeiwAll />} />
+
           <Route path="/Alerts" element={<Alerts />} />
           {isCompany && (
             <>

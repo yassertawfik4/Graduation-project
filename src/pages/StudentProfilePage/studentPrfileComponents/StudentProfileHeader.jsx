@@ -7,6 +7,7 @@ import axiosInstance from "../../../Api/axiosInstance";
 import Swal from "sweetalert2";
 
 function StudentProfileHeader({ data, handleGetProfile }) {
+  const studentid=localStorage.getItem("studentId")
   const [isEditing, setIsEditing] = useState(false);
   const isCompany = localStorage.getItem("isCompany");
   const [loading, setLoading] = useState(false);
@@ -40,7 +41,7 @@ function StudentProfileHeader({ data, handleGetProfile }) {
     }
   }, [data]);
 
-  const [profileImage, setProfileImage] = useState(studentprofile);
+  const [profileImage, setProfileImage] = useState(null);
   const fileInputRef = useRef(null);
 
   const handleOnChange = (e) => {
@@ -128,15 +129,73 @@ function StudentProfileHeader({ data, handleGetProfile }) {
       setLoading(false);
     }
   };
+  const handelGetImage=async()=>{
+    try {
+      const response=await axiosInstance.get(`Student/profile-picture/${studentid}`,{
+        responseType: 'blob',
+        headers:{
+          Authorization:`Bearer ${localStorage.getItem("accessUsertoken")}`,
+        }
+      })
+      console.log("Profile image response received")
+      const imageUrl = URL.createObjectURL(response.data);
+      console.log("Profile image URL created", imageUrl)
 
-  const handleImageChange = (e) => {
+      setProfileImage(imageUrl);
+    } catch (error) {
+      console.log("Error fetching profile image:", error)
+      // Use fallback image if fetch fails
+      setProfileImage(null);
+    }
+  }
+  useEffect(()=>{
+    handelGetImage()
+  },[])
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setProfileImage(event.target.result);
-      };
-      reader.readAsDataURL(file);
+      try {
+        // Show local preview first for better UX
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          setProfileImage(event.target.result);
+        };
+        reader.readAsDataURL(file);
+        
+        // Upload to server
+        setLoading(true);
+        const formData = new FormData();
+        formData.append('image', file);
+        
+        await axiosInstance.post('Student/profile-picture', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${localStorage.getItem("accessUsertoken")}`,
+          },
+        });
+        
+        // Refresh the image from server to ensure we have the correct one
+        handelGetImage();
+        
+        Swal.fire({
+          icon: 'success',
+          title: 'Profile Picture Updated',
+          text: 'Your profile picture has been updated successfully',
+          timer: 2000,
+          timerProgressBar: true,
+          confirmButtonColor: '#3A4C59',
+        });
+      } catch (error) {
+        console.error('Error uploading profile picture:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Upload Failed',
+          text: error.response?.data?.message || 'Failed to upload your profile picture',
+          confirmButtonColor: '#3A4C59',
+        });
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -337,9 +396,7 @@ function StudentProfileHeader({ data, handleGetProfile }) {
               onClick={handleImageClick}
             >
               <img
-                src={
-                  profileImage || studentprofile // ← ضع هنا مسار الصورة البديلة
-                }
+                src={profileImage || studentprofile}
                 alt="Profile"
                 className="w-[160px] h-[160px] rounded-full object-cover"
               />

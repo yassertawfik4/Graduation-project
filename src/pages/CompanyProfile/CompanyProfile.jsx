@@ -7,11 +7,11 @@ import CompanyFounding from "./CompanyFounding";
 import CompanyContact from "./CompanyContact";
 function CompanyProfile() {
   const [company, setCompany] = useState({});
-  
-  // const { companyid } = useParams();
+
+  const companyid = localStorage.getItem("companyId");
   const handleGetCompany = async () => {
     try {
-      const response = await axiosInstance.get(`Company/profiles`, {
+      const response = await axiosInstance.get(`Company/profiles/${companyid}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessUsertoken")}`,
         },

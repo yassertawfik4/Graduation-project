@@ -75,11 +75,15 @@ function ParticipateInternShipHome({ recommendedInternship }) {
               },
             }}
           >
-            {recommendedInternship?.realWorldProjects?.map((item) => (
+          {recommendedInternship?.realWorldProjects?.length > 0 ? (
+            recommendedInternship?.realWorldProjects?.map((item) => (
               <SwiperSlide key={item.id}>
                 <RecommendedInternshipcard item={item} />
               </SwiperSlide>
-            ))}
+            ))
+          ) : (
+            <p className="text-[#000000] flex items-center gap-2 font-[rubik] font-medium text-[17px]">No real world projects available.</p>
+          )}
           </Swiper>
         </div>
       </div>

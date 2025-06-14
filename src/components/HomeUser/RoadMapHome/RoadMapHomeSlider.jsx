@@ -76,11 +76,15 @@ function RoadMapHomeSlider({ recommendedInternship }) {
               },
             }}
           >
-            {recommendedInternship?.roadmaps?.map((item) => (
+          {recommendedInternship?.roadmaps?.length > 0 ? (
+            recommendedInternship?.roadmaps?.map((item) => (
               <SwiperSlide key={item.id}>
                 <RoadMapHomeCard item={item} />
               </SwiperSlide>
-            ))}
+            ))
+          ) : (
+            <p className="text-[#000000] flex items-center gap-2 font-[rubik] font-medium text-[17px]">No roadmaps available.</p>
+          )}
           </Swiper>
         </div>
       </div>
